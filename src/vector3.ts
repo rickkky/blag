@@ -1,15 +1,13 @@
+import { set } from './vector';
 import { Vector2 } from './vector2';
 
-export class Vector3 extends Vector2 {
-  constructor(x?: number, y?: number, z?: number);
-  constructor(...args: number[]) {
-    super(...args);
-  }
+export const vec3: Vector3['set'] = (...args: Parameters<typeof set>) => {
+  return new Vector3(...args);
+};
 
-  set(x?: number, y?: number, z?: number): void;
-  set(...args: number[]): void {
-    super.set(...args);
-    this.array[2] = args[2] || 0;
+export class Vector3Base extends Vector2 {
+  get dimension() {
+    return 3;
   }
 
   get 2() {
@@ -26,19 +24,6 @@ export class Vector3 extends Vector2 {
 
   set z(n: number) {
     this[2] = n;
-  }
-
-  clone() {
-    return new Vector3(...this.array);
-  }
-
-  cross(v: Vector3) {
-    const [x0, y0, z0] = this;
-    const [x1, y1, z1] = v;
-    this[0] = y0 * z1 - z0 * y1;
-    this[1] = z0 * x1 - x0 * z1;
-    this[2] = x0 * y1 - y0 * x1;
-    return this;
   }
 
   get xz() {
@@ -79,5 +64,40 @@ export class Vector3 extends Vector2 {
 
   get zyx() {
     return new Vector3(this.z, this.y, this.x);
+  }
+}
+
+export class Vector3 extends Vector3Base {
+  constructor(x: number, y: number, z: number);
+  constructor(list: number[]);
+  constructor(v: Vector3);
+  constructor(xy: Vector2, z: number);
+  constructor(x: number, yz: Vector2);
+  constructor(...args: Parameters<typeof set>);
+  constructor(...args: Parameters<typeof set>) {
+    super(...args);
+  }
+
+  set(x: number, y: number, z: number): Vector3;
+  set(list: number[]): Vector3;
+  set(v: Vector3): Vector3;
+  set(xy: Vector2, z: number): Vector3;
+  set(x: number, yz: Vector2): Vector3;
+  set(...args: Parameters<typeof set>): Vector3;
+  set(...args: Parameters<typeof set>) {
+    return set.apply(this, args);
+  }
+
+  clone() {
+    return new Vector3(this.array);
+  }
+
+  cross(v: Vector3) {
+    const [x0, y0, z0] = this;
+    const [x1, y1, z1] = v;
+    this[0] = y0 * z1 - z0 * y1;
+    this[1] = z0 * x1 - x0 * z1;
+    this[2] = x0 * y1 - y0 * x1;
+    return this;
   }
 }

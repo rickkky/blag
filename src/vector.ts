@@ -1,14 +1,16 @@
-export class Vector {
+export class VectorBase {
   protected array: number[] = [];
 
-  constructor(x?: number);
   constructor(...args: Parameters<typeof set>) {
-    set.call(this, ...args);
+    set.apply(this, args);
   }
 
-  set(x?: number): void;
-  set(...args: Parameters<typeof set>): void {
-    set.call(this, ...args);
+  set(...args: Parameters<typeof set>) {
+    return set.apply(this, args);
+  }
+
+  clone() {
+    return new VectorBase(...this.array);
   }
 
   get dimension() {
@@ -39,41 +41,36 @@ export class Vector {
     return this.array[Symbol.iterator]();
   }
 
-  clone() {
-    return new Vector(...this.array);
-  }
-
   equal(v: typeof this) {
     return this.array.every((n, i) => n === v.array[i]);
   }
 
   add(v: typeof this) {
-    for (const i of this.array.keys()) {
+    for (let i = 0; i < this.dimension; i++) {
       this.array[i] += v.array[i];
     }
     return this;
   }
 
   substract(v: typeof this) {
-    for (const i of this.array.keys()) {
+    for (let i = 0; i < this.dimension; i++) {
       this.array[i] -= v.array[i];
     }
     return this;
   }
 
   scale(n: number) {
-    for (const i of this.array.keys()) {
+    for (let i = 0; i < this.dimension; i++) {
       this.array[i] *= n;
     }
     return this;
   }
 
   normalize() {
-    const size = this.size;
-    if (size === 0) {
+    if (this.size === 0) {
       throw new Error('Cannot normalize a zero vector');
     }
-    return this.scale(1 / size);
+    return this.scale(1 / this.size);
   }
 
   dot(v: typeof this) {
@@ -81,17 +78,15 @@ export class Vector {
   }
 }
 
-export function set(
-  this: Vector,
-  ...args: (number | number[] | Vector | undefined)[]
+export function set<T extends VectorBase>(
+  this: T,
+  ...args: (number | number[] | VectorBase | undefined)[]
 ) {
   const elements = [];
   for (const arg of args) {
     if (typeof arg === 'number') {
       elements.push(arg);
-    } else if (arg instanceof Vector) {
-      elements.push(...arg);
-    } else if (Array.isArray(arg)) {
+    } else if (arg instanceof VectorBase || Array.isArray(arg)) {
       elements.push(...arg);
     } else {
       elements.push(0);
@@ -99,7 +94,8 @@ export function set(
   }
   const array = [];
   for (let i = 0; i < this.dimension; i++) {
-    array[i] = elements[i] || 0;
+    array[i] = Number.isFinite(elements[i]) ? elements[i] : 0;
   }
   this.array = array;
+  return this;
 }

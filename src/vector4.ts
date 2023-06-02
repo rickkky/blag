@@ -1,16 +1,46 @@
+import { set } from './vector';
 import { Vector2 } from './vector2';
-import { Vector3 } from './vector3';
+import { Vector3, Vector3Base } from './vector3';
 
-export class Vector4 extends Vector3 {
-  constructor(x?: number, y?: number, z?: number, w?: number);
-  constructor(...args: number[]) {
+export const vec4: Vector4['set'] = (...args: Parameters<typeof set>) => {
+  return new Vector4(...args);
+};
+
+export class Vector4 extends Vector3Base {
+  constructor(x: number, y: number, z: number, w: number);
+  constructor(list: number[]);
+  constructor(v: Vector4);
+  constructor(xyz: Vector3, w: number);
+  constructor(x: number, yzw: Vector3);
+  constructor(xy: Vector2, zw: Vector2);
+  constructor(xy: Vector2, z: number, w: number);
+  constructor(x: number, yz: Vector2, w: number);
+  constructor(x: number, y: number, zw: Vector2);
+  constructor(...args: Parameters<typeof set>);
+  constructor(...args: Parameters<typeof set>) {
     super(...args);
   }
 
-  set(x?: number, y?: number, z?: number, w?: number): void;
-  set(...args: number[]): void {
-    super.set(...args);
-    this.array[3] = args[3] || 0;
+  get dimension() {
+    return 4;
+  }
+
+  set(x: number, y: number, z: number, w: number): Vector4;
+  set(list: number[]): Vector4;
+  set(v: Vector4): Vector4;
+  set(xyz: Vector3, w: number): Vector4;
+  set(x: number, yzw: Vector3): Vector4;
+  set(xy: Vector2, zw: Vector2): Vector4;
+  set(xy: Vector2, z: number, w: number): Vector4;
+  set(x: number, yz: Vector2, w: number): Vector4;
+  set(x: number, y: number, zw: Vector2): Vector4;
+  set(...args: Parameters<typeof set>): Vector4;
+  set(...args: Parameters<typeof set>) {
+    return set.apply(this, args);
+  }
+
+  clone() {
+    return new Vector4(this.array);
   }
 
   get 3() {
@@ -27,10 +57,6 @@ export class Vector4 extends Vector3 {
 
   set w(n: number) {
     this[3] = n;
-  }
-
-  clone() {
-    return new Vector4(...this.array);
   }
 
   get xw() {
