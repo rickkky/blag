@@ -57,8 +57,8 @@ describe('vector2', () => {
 
   test('2d getter', () => {
     const v = vec2(1, 2);
-    expect(v.xy.equal(vec2(1, 2)));
-    expect(v.yx.equal(vec2(2, 1)));
+    expect(v.xy.equal(vec2(1, 2))).toBe(true);
+    expect(v.yx.equal(vec2(2, 1))).toBe(true);
   });
 
   test('clone', () => {

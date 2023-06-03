@@ -69,12 +69,22 @@ describe('vector3', () => {
 
   test('2d getter', () => {
     const v = vec3(1, 2, 3);
-    expect(v.xy.equal(vec3(1, 2)));
-    expect(v.xz.equal(vec3(1, 3)));
-    expect(v.yx.equal(vec3(2, 1)));
-    expect(v.yz.equal(vec3(2, 3)));
-    expect(v.zx.equal(vec3(3, 1)));
-    expect(v.zy.equal(vec3(3, 2)));
+    expect(v.xy.equal(vec3(1, 2))).toBe(true);
+    expect(v.xz.equal(vec3(1, 3))).toBe(true);
+    expect(v.yx.equal(vec3(2, 1))).toBe(true);
+    expect(v.yz.equal(vec3(2, 3))).toBe(true);
+    expect(v.zx.equal(vec3(3, 1))).toBe(true);
+    expect(v.zy.equal(vec3(3, 2))).toBe(true);
+  });
+
+  test('3d getter', () => {
+    const v = vec3(1, 2, 3);
+    expect(v.xyz.equal(vec3(1, 2, 3))).toBe(true);
+    expect(v.xzy.equal(vec3(1, 3, 2))).toBe(true);
+    expect(v.yxz.equal(vec3(2, 1, 3))).toBe(true);
+    expect(v.yzx.equal(vec3(2, 3, 1))).toBe(true);
+    expect(v.zxy.equal(vec3(3, 1, 2))).toBe(true);
+    expect(v.zyx.equal(vec3(3, 2, 1))).toBe(true);
   });
 
   test('clone', () => {
