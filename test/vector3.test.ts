@@ -1,32 +1,69 @@
 import { describe, expect, test } from 'vitest';
+import { vec2 } from '/src/vector2';
 import { Vector3, vec3 } from '/src/vector3';
 
 describe('vector3', () => {
   test('constructor', () => {
-    const v0 = new Vector3(1, 2, 3);
-    expect(v0.dimension).toBe(3);
-    expect(v0[0]).toBe(1);
-    expect(v0.x).toBe(1);
-    expect(v0[1]).toBe(2);
-    expect(v0.y).toBe(2);
-    expect(v0[2]).toBe(3);
-    expect(v0.size).toBe(Math.hypot(1, 2, 3));
+    const v = new Vector3(1, 2, 3);
+    expect(v.dimension).toBe(3);
+    expect(v[0]).toBe(1);
+    expect(v.x).toBe(1);
+    expect(v[1]).toBe(2);
+    expect(v.y).toBe(2);
+    expect(v[2]).toBe(3);
+    expect(v.z).toBe(3);
+    expect(v.size).toBe(Math.hypot(1, 2, 3));
   });
 
   test('create', () => {
-    const v0 = vec3(1, 2, 3);
-    expect(v0.dimension).toBe(3);
-    expect(v0[0]).toBe(1);
-    expect(v0.x).toBe(1);
-    expect(v0[1]).toBe(2);
-    expect(v0.y).toBe(2);
-    expect(v0[2]).toBe(3);
-    expect(v0.size).toBe(Math.hypot(1, 2, 3));
+    const v = vec3(1, 2, 3);
+    expect(v.dimension).toBe(3);
+    expect(v[0]).toBe(1);
+    expect(v.x).toBe(1);
+    expect(v[1]).toBe(2);
+    expect(v.y).toBe(2);
+    expect(v[2]).toBe(3);
+    expect(v.z).toBe(3);
+    expect(v.size).toBe(Math.hypot(1, 2, 3));
   });
 
   test('equal', () => {
     expect(vec3(1, 2, 3).equal(vec3(1, 2, 3))).toBe(true);
     expect(vec3(1, 2, 3).equal(vec3(3, 2, 1))).toBe(false);
+  });
+
+  test('setter', () => {
+    const v = vec3(1, 2, 3);
+    v.set(4, 5, 6);
+    expect(v.equal(vec3(4, 5, 6))).toBe(true);
+    v[0] = 7;
+    v[1] = 8;
+    v[2] = 9;
+    expect(v.equal(vec3(7, 8, 9))).toBe(true);
+    v.x = 10;
+    v.y = 11;
+    v.z = 12;
+    expect(v.equal(vec3(10, 11, 12))).toBe(true);
+  });
+
+  test('2d getter', () => {
+    const v = vec3(1, 2, 3);
+    expect(v.xy.equal(vec2(1, 2))).toBe(true);
+    expect(v.xz.equal(vec2(1, 3))).toBe(true);
+    expect(v.yx.equal(vec2(2, 1))).toBe(true);
+    expect(v.yz.equal(vec2(2, 3))).toBe(true);
+    expect(v.zx.equal(vec2(3, 1))).toBe(true);
+    expect(v.zy.equal(vec2(3, 2))).toBe(true);
+  });
+
+  test('3d getter', () => {
+    const v = vec3(1, 2, 3);
+    expect(v.xyz.equal(vec3(1, 2, 3))).toBe(true);
+    expect(v.xzy.equal(vec3(1, 3, 2))).toBe(true);
+    expect(v.yxz.equal(vec3(2, 1, 3))).toBe(true);
+    expect(v.yzx.equal(vec3(2, 3, 1))).toBe(true);
+    expect(v.zxy.equal(vec3(3, 1, 2))).toBe(true);
+    expect(v.zyx.equal(vec3(3, 2, 1))).toBe(true);
   });
 
   test('constructor overloads', () => {
@@ -51,40 +88,6 @@ describe('vector3', () => {
     expect(v3.equal(v0)).toBe(true);
     const v4 = vec3(1, v0.yz);
     expect(v4.equal(v0)).toBe(true);
-  });
-
-  test('setter', () => {
-    const v = vec3(1, 2, 3);
-    v.set(4, 5, 6);
-    expect(v.equal(vec3(4, 5, 6))).toBe(true);
-    v[0] = 7;
-    v[1] = 8;
-    v[2] = 9;
-    expect(v.equal(vec3(7, 8, 9))).toBe(true);
-    v.x = 10;
-    v.y = 11;
-    v.z = 12;
-    expect(v.equal(vec3(10, 11, 12))).toBe(true);
-  });
-
-  test('2d getter', () => {
-    const v = vec3(1, 2, 3);
-    expect(v.xy.equal(vec3(1, 2))).toBe(true);
-    expect(v.xz.equal(vec3(1, 3))).toBe(true);
-    expect(v.yx.equal(vec3(2, 1))).toBe(true);
-    expect(v.yz.equal(vec3(2, 3))).toBe(true);
-    expect(v.zx.equal(vec3(3, 1))).toBe(true);
-    expect(v.zy.equal(vec3(3, 2))).toBe(true);
-  });
-
-  test('3d getter', () => {
-    const v = vec3(1, 2, 3);
-    expect(v.xyz.equal(vec3(1, 2, 3))).toBe(true);
-    expect(v.xzy.equal(vec3(1, 3, 2))).toBe(true);
-    expect(v.yxz.equal(vec3(2, 1, 3))).toBe(true);
-    expect(v.yzx.equal(vec3(2, 3, 1))).toBe(true);
-    expect(v.zxy.equal(vec3(3, 1, 2))).toBe(true);
-    expect(v.zyx.equal(vec3(3, 2, 1))).toBe(true);
   });
 
   test('clone', () => {
@@ -125,5 +128,11 @@ describe('vector3', () => {
     const v0 = vec3(1, 2, 3);
     const v1 = vec3(3, 2, 1);
     expect(v0.dot(v1)).toBe(10);
+  });
+
+  test('cross', () => {
+    const v0 = vec3(1, 2, 3);
+    const v1 = vec3(3, 2, 1);
+    expect(v0.cross(v1).equal(vec3(-4, 8, -4))).toBe(true);
   });
 });

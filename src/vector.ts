@@ -5,16 +5,16 @@ export class VectorBase {
     set.apply(this, args);
   }
 
+  get dimension() {
+    return 1;
+  }
+
   set(...args: Parameters<typeof set>) {
     return set.apply(this, args);
   }
 
   clone() {
     return new VectorBase(...this.array);
-  }
-
-  get dimension() {
-    return 1;
   }
 
   get size() {
@@ -42,7 +42,10 @@ export class VectorBase {
   }
 
   equal(v: typeof this) {
-    return this.array.every((n, i) => n === v.array[i]);
+    return (
+      this.dimension === v.dimension &&
+      this.array.every((n, i) => n === v.array[i])
+    );
   }
 
   add(v: typeof this) {

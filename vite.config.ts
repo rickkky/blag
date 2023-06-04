@@ -6,8 +6,8 @@ export default defineConfig(() => {
     build: {
       lib: {
         entry: resolve(__dirname, 'src/index.ts'),
-        name: 'TVECTOR',
-        fileName: 't-vector',
+        name: 'VMATRIX',
+        fileName: 'v-matrix',
       },
     },
     server: {

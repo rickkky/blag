@@ -27,22 +27,6 @@ describe('vector2', () => {
     expect(vec2(1, 2).equal(vec2(2, 1))).toBe(false);
   });
 
-  test('constructor overloads', () => {
-    const v0 = new Vector2(1, 2);
-    const v1 = new Vector2([1, 2]);
-    expect(v1.equal(v0)).toBe(true);
-    const v2 = new Vector2(v0);
-    expect(v2.equal(v0)).toBe(true);
-  });
-
-  test('create overloads', () => {
-    const v0 = vec2(1, 2);
-    const v1 = vec2([1, 2]);
-    expect(v1.equal(v0)).toBe(true);
-    const v2 = vec2(v0);
-    expect(v2.equal(v0)).toBe(true);
-  });
-
   test('setter', () => {
     const v = vec2(1, 2);
     v.set(3, 4);
@@ -59,6 +43,22 @@ describe('vector2', () => {
     const v = vec2(1, 2);
     expect(v.xy.equal(vec2(1, 2))).toBe(true);
     expect(v.yx.equal(vec2(2, 1))).toBe(true);
+  });
+
+  test('constructor overloads', () => {
+    const v0 = new Vector2(1, 2);
+    const v1 = new Vector2([1, 2]);
+    expect(v1.equal(v0)).toBe(true);
+    const v2 = new Vector2(v0);
+    expect(v2.equal(v0)).toBe(true);
+  });
+
+  test('create overloads', () => {
+    const v0 = vec2(1, 2);
+    const v1 = vec2([1, 2]);
+    expect(v1.equal(v0)).toBe(true);
+    const v2 = vec2(v0);
+    expect(v2.equal(v0)).toBe(true);
   });
 
   test('clone', () => {
