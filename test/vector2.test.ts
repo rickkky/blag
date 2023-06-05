@@ -3,23 +3,23 @@ import { Vector2, vec2 } from '/src/vector2';
 
 describe('vector2', () => {
   test('constructor', () => {
-    const v0 = new Vector2(1, 2);
-    expect(v0.dimension).toBe(2);
-    expect(v0[0]).toBe(1);
-    expect(v0.x).toBe(1);
-    expect(v0[1]).toBe(2);
-    expect(v0.y).toBe(2);
-    expect(v0.size).toBe(Math.hypot(1, 2));
+    const v = new Vector2(1, 2);
+    expect(v.dimension).toBe(2);
+    expect(v[0]).toBe(1);
+    expect(v.x).toBe(1);
+    expect(v[1]).toBe(2);
+    expect(v.y).toBe(2);
+    expect(v.size).toBe(Math.hypot(1, 2));
   });
 
   test('create', () => {
-    const v0 = vec2(1, 2);
-    expect(v0.dimension).toBe(2);
-    expect(v0[0]).toBe(1);
-    expect(v0.x).toBe(1);
-    expect(v0[1]).toBe(2);
-    expect(v0.y).toBe(2);
-    expect(v0.size).toBe(Math.hypot(1, 2));
+    const v = vec2(1, 2);
+    expect(v.dimension).toBe(2);
+    expect(v[0]).toBe(1);
+    expect(v.x).toBe(1);
+    expect(v[1]).toBe(2);
+    expect(v.y).toBe(2);
+    expect(v.size).toBe(Math.hypot(1, 2));
   });
 
   test('equal', () => {
@@ -59,6 +59,14 @@ describe('vector2', () => {
     expect(v1.equal(v0)).toBe(true);
     const v2 = vec2(v0);
     expect(v2.equal(v0)).toBe(true);
+  });
+
+  test('set overloads', () => {
+    const v = vec2(1, 2);
+    v.set([3, 4]);
+    expect(v.equal(vec2(3, 4))).toBe(true);
+    v.set(vec2(5, 6));
+    expect(v.equal(vec2(5, 6))).toBe(true);
   });
 
   test('clone', () => {

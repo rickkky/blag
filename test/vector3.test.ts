@@ -90,6 +90,18 @@ describe('vector3', () => {
     expect(v4.equal(v0)).toBe(true);
   });
 
+  test('set overloads', () => {
+    const v = vec3(1, 2, 3);
+    v.set([4, 5, 6]);
+    expect(v.equal(vec3(4, 5, 6))).toBe(true);
+    v.set(vec3(7, 8, 9));
+    expect(v.equal(vec3(7, 8, 9))).toBe(true);
+    v.set(vec2(10, 11), 12);
+    expect(v.equal(vec3(10, 11, 12))).toBe(true);
+    v.set(13, vec2(14, 15));
+    expect(v.equal(vec3(13, 14, 15))).toBe(true);
+  });
+
   test('clone', () => {
     const v = vec3(1, 2, 3);
     const c = v.clone();
