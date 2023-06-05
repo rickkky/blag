@@ -1,32 +1,8 @@
 import { VectorBase, set } from './vector';
 
-export const vec2: Vector2['set'] = (...args: Parameters<typeof set>) => {
-  return new Vector2(...args);
-};
-
-export class Vector2 extends VectorBase {
-  constructor(x: number, y: number);
-  constructor(list: number[]);
-  constructor(v: Vector2);
-  constructor(...args: Parameters<typeof set>);
-  constructor(...args: Parameters<typeof set>) {
-    super(...args);
-  }
-
+export class Vector2Base extends VectorBase {
   get dimension() {
     return 2;
-  }
-
-  set(x: number, y: number): Vector2;
-  set(list: number[]): Vector2;
-  set(v: Vector2): Vector2;
-  set(...args: Parameters<typeof set>): Vector2;
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
-  }
-
-  clone() {
-    return new Vector2(this.array);
   }
 
   get 1() {
@@ -53,3 +29,29 @@ export class Vector2 extends VectorBase {
     return new Vector2(this.y, this.x);
   }
 }
+
+export class Vector2 extends Vector2Base {
+  constructor(x: number, y: number);
+  constructor(list: number[]);
+  constructor(v: Vector2);
+  constructor(...args: Parameters<typeof set>);
+  constructor(...args: Parameters<typeof set>) {
+    super(...args);
+  }
+
+  set(x: number, y: number): Vector2;
+  set(list: number[]): Vector2;
+  set(v: Vector2): Vector2;
+  set(...args: Parameters<typeof set>): Vector2;
+  set(...args: Parameters<typeof set>) {
+    return set.apply(this, args);
+  }
+
+  clone() {
+    return new Vector2(this.array);
+  }
+}
+
+export const vec2: Vector2['set'] = (...args: Parameters<typeof set>) => {
+  return new Vector2(...args);
+};

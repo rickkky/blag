@@ -1,11 +1,7 @@
 import { set } from './vector';
-import { Vector2 } from './vector2';
+import { Vector2, Vector2Base } from './vector2';
 
-export const vec3: Vector3['set'] = (...args: Parameters<typeof set>) => {
-  return new Vector3(...args);
-};
-
-export class Vector3Base extends Vector2 {
+export class Vector3Base extends Vector2Base {
   get dimension() {
     return 3;
   }
@@ -30,12 +26,12 @@ export class Vector3Base extends Vector2 {
     return new Vector2(this.x, this.z);
   }
 
-  get zx() {
-    return new Vector2(this.z, this.x);
-  }
-
   get yz() {
     return new Vector2(this.y, this.z);
+  }
+
+  get zx() {
+    return new Vector2(this.z, this.x);
   }
 
   get zy() {
@@ -101,3 +97,7 @@ export class Vector3 extends Vector3Base {
     return this;
   }
 }
+
+export const vec3: Vector3['set'] = (...args: Parameters<typeof set>) => {
+  return new Vector3(...args);
+};
