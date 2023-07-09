@@ -84,10 +84,6 @@ export class Vector3 extends Vector3Base {
     return set.apply(this, args);
   }
 
-  clone() {
-    return new Vector3(this.array);
-  }
-
   cross(v: Vector3) {
     const [x0, y0, z0] = this;
     const [x1, y1, z1] = v;
@@ -96,8 +92,24 @@ export class Vector3 extends Vector3Base {
     this[2] = x0 * y1 - y0 * x1;
     return this;
   }
+
+  static zero() {
+    return new Vector3(0, 0, 0);
+  }
 }
 
-export const vec3: Vector3['set'] = (...args: Parameters<typeof set>) => {
+type Vec3 = {
+  (x: number, y: number, z: number): Vector3;
+  (list: number[]): Vector3;
+  (v: Vector3): Vector3;
+  (xy: Vector2, z: number): Vector3;
+  (x: number, yz: Vector2): Vector3;
+  (...args: Parameters<typeof set>): Vector3;
+  zero: () => Vector3;
+};
+
+export const vec3: Vec3 = (...args: Parameters<typeof set>) => {
   return new Vector3(...args);
 };
+
+vec3.zero = Vector3.zero;

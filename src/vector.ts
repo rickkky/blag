@@ -1,3 +1,5 @@
+import { MatrixBase } from './matrix';
+
 export class VectorBase {
   protected array: number[] = [];
 
@@ -9,17 +11,11 @@ export class VectorBase {
     return 1;
   }
 
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
-  }
-
-  clone() {
-    return new VectorBase(...this.array);
-  }
-
   get size() {
     return Math.hypot(...this.array);
   }
+
+  [i: number]: number;
 
   get 0() {
     return this.array[0];
@@ -39,6 +35,20 @@ export class VectorBase {
 
   [Symbol.iterator]() {
     return this.array[Symbol.iterator]();
+  }
+
+  set(...args: Parameters<typeof set>) {
+    return set.apply(this, args);
+  }
+
+  clone() {
+    const prototype = Object.getPrototypeOf(this);
+    const Constructor = prototype.constructor;
+    return new Constructor(...this.array) as typeof this;
+  }
+
+  toArray() {
+    return [...this.array];
   }
 
   equal(v: typeof this) {
@@ -98,6 +108,21 @@ export function set<T extends VectorBase>(
   const array = [];
   for (let i = 0; i < this.dimension; i++) {
     array[i] = Number.isFinite(elements[i]) ? elements[i] : 0;
+  }
+  this.array = array;
+  return this;
+}
+
+export function transform(this: VectorBase, m: MatrixBase) {
+  if (m.dimension !== this.dimension) {
+    throw new Error('Cannot transform vector by matrix of different dimension');
+  }
+  const array = [];
+  for (let i = 0; i < this.dimension; i++) {
+    array[i] = 0;
+    for (let j = 0; j < this.dimension; j++) {
+      array[i] += this.array[j] * m[j][i];
+    }
   }
   this.array = array;
   return this;

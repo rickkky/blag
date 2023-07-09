@@ -47,11 +47,21 @@ export class Vector2 extends Vector2Base {
     return set.apply(this, args);
   }
 
-  clone() {
-    return new Vector2(this.array);
+  static zero() {
+    return new Vector2(0, 0);
   }
 }
 
-export const vec2: Vector2['set'] = (...args: Parameters<typeof set>) => {
+type Vec2 = {
+  (x: number, y: number): Vector2;
+  (list: number[]): Vector2;
+  (v: Vector2): Vector2;
+  (...args: Parameters<typeof set>): Vector2;
+  zero: () => Vector2;
+};
+
+export const vec2: Vec2 = (...args: Parameters<typeof set>) => {
   return new Vector2(...args);
 };
+
+vec2.zero = Vector2.zero;

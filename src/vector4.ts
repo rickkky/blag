@@ -245,11 +245,27 @@ export class Vector4 extends Vector4Base {
     return set.apply(this, args);
   }
 
-  clone() {
-    return new Vector4(this.array);
+  static zero() {
+    return new Vector4(0, 0, 0, 0);
   }
 }
 
-export const vec4: Vector4['set'] = (...args: Parameters<typeof set>) => {
+type Vec4 = {
+  (x: number, y: number, z: number, w: number): Vector4;
+  (list: number[]): Vector4;
+  (v: Vector4): Vector4;
+  (xyz: Vector3, w: number): Vector4;
+  (x: number, yzw: Vector3): Vector4;
+  (xy: Vector2, zw: Vector2): Vector4;
+  (xy: Vector2, z: number, w: number): Vector4;
+  (x: number, yz: Vector2, w: number): Vector4;
+  (x: number, y: number, zw: Vector2): Vector4;
+  (...args: Parameters<typeof set>): Vector4;
+  zero(): Vector4;
+};
+
+export const vec4: Vec4 = (...args: Parameters<typeof set>) => {
   return new Vector4(...args);
 };
+
+vec4.zero = Vector4.zero;
