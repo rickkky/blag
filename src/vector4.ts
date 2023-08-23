@@ -1,12 +1,9 @@
-import { set } from './vector';
+import { VectorBase, createVectorStatics } from './vector';
 import { Vector2 } from './vector2';
 import { Vector3, Vector3Base } from './vector3';
+import { Matrix4 } from './matrix4';
 
-export class Vector4Base extends Vector3Base {
-  get dimension() {
-    return 4;
-  }
-
+export abstract class Vector4Base extends Vector3Base {
   get 3() {
     return this.array[3];
   }
@@ -226,31 +223,36 @@ export class Vector4 extends Vector4Base {
   constructor(xy: Vector2, z: number, w: number);
   constructor(x: number, yz: Vector2, w: number);
   constructor(x: number, y: number, zw: Vector2);
-  constructor(...args: Parameters<typeof set>);
-  constructor(...args: Parameters<typeof set>) {
+  constructor(...args: ConstructorParameters<typeof VectorBase>);
+  constructor(...args: ConstructorParameters<typeof VectorBase>) {
     super(...args);
   }
 
-  set(x: number, y: number, z: number, w: number): Vector4;
-  set(list: number[]): Vector4;
-  set(v: Vector4): Vector4;
-  set(xyz: Vector3, w: number): Vector4;
-  set(x: number, yzw: Vector3): Vector4;
-  set(xy: Vector2, zw: Vector2): Vector4;
-  set(xy: Vector2, z: number, w: number): Vector4;
-  set(x: number, yz: Vector2, w: number): Vector4;
-  set(x: number, y: number, zw: Vector2): Vector4;
-  set(...args: Parameters<typeof set>): Vector4;
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
+  get dimension(): 4 {
+    return 4;
   }
 
-  static zero() {
-    return new Vector4(0, 0, 0, 0);
+  set(x: number, y: number, z: number, w: number): this;
+  set(list: number[]): this;
+  set(v: Vector4): this;
+  set(xyz: Vector3, w: number): this;
+  set(x: number, yzw: Vector3): this;
+  set(xy: Vector2, zw: Vector2): this;
+  set(xy: Vector2, z: number, w: number): this;
+  set(x: number, yz: Vector2, w: number): this;
+  set(x: number, y: number, zw: Vector2): this;
+  set(...args: ConstructorParameters<typeof VectorBase>): this;
+  set(...args: ConstructorParameters<typeof VectorBase>) {
+    return super.set(...args);
+  }
+
+  transform(m: Matrix4) {
+    return super.transform(m);
   }
 }
 
-type Vec4 = {
+interface Vec4
+  extends ReturnType<typeof createVectorStatics<Vector4, Matrix4>> {
   (x: number, y: number, z: number, w: number): Vector4;
   (list: number[]): Vector4;
   (v: Vector4): Vector4;
@@ -260,12 +262,12 @@ type Vec4 = {
   (xy: Vector2, z: number, w: number): Vector4;
   (x: number, yz: Vector2, w: number): Vector4;
   (x: number, y: number, zw: Vector2): Vector4;
-  (...args: Parameters<typeof set>): Vector4;
-  zero(): Vector4;
-};
+  (...args: ConstructorParameters<typeof VectorBase>): Vector4;
+}
 
-export const vec4: Vec4 = (...args: Parameters<typeof set>) => {
-  return new Vector4(...args);
-};
-
-vec4.zero = Vector4.zero;
+export const vec4: Vec4 = Object.assign(
+  (...args: ConstructorParameters<typeof VectorBase>) => {
+    return new Vector4(...args);
+  },
+  createVectorStatics<Vector4, Matrix4>(Vector4),
+);

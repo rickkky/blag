@@ -1,11 +1,10 @@
-import { set } from './vector';
+import { VectorBase, createVectorStatics } from './vector';
 import { Vector2, Vector2Base } from './vector2';
+import { MatrixBase } from './matrix';
+import { Matrix3 } from './matrix3';
+import { Matrix4 } from './matrix4';
 
-export class Vector3Base extends Vector2Base {
-  get dimension() {
-    return 3;
-  }
-
+export abstract class Vector3Base extends Vector2Base {
   get 2() {
     return this.array[2];
   }
@@ -69,19 +68,27 @@ export class Vector3 extends Vector3Base {
   constructor(v: Vector3);
   constructor(xy: Vector2, z: number);
   constructor(x: number, yz: Vector2);
-  constructor(...args: Parameters<typeof set>);
-  constructor(...args: Parameters<typeof set>) {
+  constructor(...args: ConstructorParameters<typeof VectorBase>);
+  constructor(...args: ConstructorParameters<typeof VectorBase>) {
     super(...args);
   }
 
-  set(x: number, y: number, z: number): Vector3;
-  set(list: number[]): Vector3;
-  set(v: Vector3): Vector3;
-  set(xy: Vector2, z: number): Vector3;
-  set(x: number, yz: Vector2): Vector3;
-  set(...args: Parameters<typeof set>): Vector3;
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
+  get dimension(): 3 {
+    return 3;
+  }
+
+  set(x: number, y: number, z: number): this;
+  set(list: number[]): this;
+  set(v: Vector3): this;
+  set(xy: Vector2, z: number): this;
+  set(x: number, yz: Vector2): this;
+  set(...args: ConstructorParameters<typeof VectorBase>): this;
+  set(...args: ConstructorParameters<typeof VectorBase>) {
+    return super.set(...args);
+  }
+
+  transform(m: Matrix3 | Matrix4) {
+    return super.transform(m);
   }
 
   cross(v: Vector3) {
@@ -92,24 +99,34 @@ export class Vector3 extends Vector3Base {
     this[2] = x0 * y1 - y0 * x1;
     return this;
   }
-
-  static zero() {
-    return new Vector3(0, 0, 0);
-  }
 }
 
-type Vec3 = {
+function createVector3Statics<
+  V extends Vector3,
+  TM extends MatrixBase<VectorBase>,
+>(Ctor: new () => V) {
+  return {
+    ...createVectorStatics<V, TM>(Ctor),
+
+    cross(v0: V, v1: V) {
+      return v0.clone().cross(v1);
+    },
+  };
+}
+
+interface Vec3
+  extends ReturnType<typeof createVector3Statics<Vector3, Matrix3 | Matrix4>> {
   (x: number, y: number, z: number): Vector3;
   (list: number[]): Vector3;
   (v: Vector3): Vector3;
   (xy: Vector2, z: number): Vector3;
   (x: number, yz: Vector2): Vector3;
-  (...args: Parameters<typeof set>): Vector3;
-  zero: () => Vector3;
-};
+  (...args: ConstructorParameters<typeof VectorBase>): Vector3;
+}
 
-export const vec3: Vec3 = (...args: Parameters<typeof set>) => {
-  return new Vector3(...args);
-};
-
-vec3.zero = Vector3.zero;
+export const vec3: Vec3 = Object.assign(
+  (...args: ConstructorParameters<typeof VectorBase>) => {
+    return new Vector3(...args);
+  },
+  createVector3Statics<Vector3, Matrix3 | Matrix4>(Vector3),
+);

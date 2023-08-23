@@ -1,10 +1,8 @@
-import { VectorBase, set } from './vector';
+import { VectorBase, createVectorStatics } from './vector';
+import { Matrix2 } from './matrix2';
+import { Matrix3 } from './matrix3';
 
-export class Vector2Base extends VectorBase {
-  get dimension() {
-    return 2;
-  }
-
+export abstract class Vector2Base extends VectorBase {
   get 1() {
     return this.array[1];
   }
@@ -34,34 +32,39 @@ export class Vector2 extends Vector2Base {
   constructor(x: number, y: number);
   constructor(list: number[]);
   constructor(v: Vector2);
-  constructor(...args: Parameters<typeof set>);
-  constructor(...args: Parameters<typeof set>) {
+  constructor(...args: ConstructorParameters<typeof VectorBase>);
+  constructor(...args: ConstructorParameters<typeof VectorBase>) {
     super(...args);
   }
 
-  set(x: number, y: number): Vector2;
-  set(list: number[]): Vector2;
-  set(v: Vector2): Vector2;
-  set(...args: Parameters<typeof set>): Vector2;
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
+  get dimension(): 2 {
+    return 2;
   }
 
-  static zero() {
-    return new Vector2(0, 0);
+  set(x: number, y: number): this;
+  set(list: number[]): this;
+  set(v: Vector2): this;
+  set(...args: ConstructorParameters<typeof VectorBase>): this;
+  set(...args: ConstructorParameters<typeof VectorBase>) {
+    return super.set(...args);
+  }
+
+  transform(m: Matrix2 | Matrix3) {
+    return super.transform(m);
   }
 }
 
-type Vec2 = {
+interface Vec2
+  extends ReturnType<typeof createVectorStatics<Vector2, Matrix2 | Matrix3>> {
   (x: number, y: number): Vector2;
   (list: number[]): Vector2;
   (v: Vector2): Vector2;
-  (...args: Parameters<typeof set>): Vector2;
-  zero: () => Vector2;
-};
+  (...args: ConstructorParameters<typeof VectorBase>): Vector2;
+}
 
-export const vec2: Vec2 = (...args: Parameters<typeof set>) => {
-  return new Vector2(...args);
-};
-
-vec2.zero = Vector2.zero;
+export const vec2: Vec2 = Object.assign(
+  (...args: ConstructorParameters<typeof VectorBase>) => {
+    return new Vector2(...args);
+  },
+  createVectorStatics<Vector2, Matrix2 | Matrix3>(Vector2),
+);

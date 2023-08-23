@@ -1,21 +1,19 @@
 import { MatrixBase } from './matrix';
 
-export class VectorBase {
+export abstract class VectorBase {
   protected array: number[] = [];
 
   constructor(...args: Parameters<typeof set>) {
     set.apply(this, args);
   }
 
-  get dimension() {
-    return 1;
-  }
+  abstract get dimension(): number;
 
   get size() {
     return Math.hypot(...this.array);
   }
 
-  [i: number]: number;
+  [index: number]: number;
 
   get 0() {
     return this.array[0];
@@ -38,13 +36,13 @@ export class VectorBase {
   }
 
   set(...args: Parameters<typeof set>) {
-    return set.apply(this, args);
+    return set.apply(this, args) as this;
   }
 
   clone() {
-    const prototype = Object.getPrototypeOf(this);
-    const Constructor = prototype.constructor;
-    return new Constructor(...this.array) as typeof this;
+    const proto = Object.getPrototypeOf(this);
+    const Ctor = proto.constructor;
+    return new Ctor(this.array) as this;
   }
 
   toArray() {
@@ -87,12 +85,20 @@ export class VectorBase {
   }
 
   dot(v: typeof this) {
-    return this.array.reduce((acc, n, i) => acc + n * v.array[i], 0);
+    return this.array.reduce((acc, n, i) => acc + n * v[i], 0);
+  }
+
+  transform(m: MatrixBase<VectorBase>) {
+    return transform.call(this, m) as this;
+  }
+
+  zero() {
+    return this.set();
   }
 }
 
-export function set<T extends VectorBase>(
-  this: T,
+function set<V extends VectorBase>(
+  this: V,
   ...args: (number | number[] | VectorBase | undefined)[]
 ) {
   const elements = [];
@@ -113,17 +119,75 @@ export function set<T extends VectorBase>(
   return this;
 }
 
-export function transform(this: VectorBase, m: MatrixBase) {
-  if (m.dimension !== this.dimension) {
-    throw new Error('Cannot transform vector by matrix of different dimension');
+export function transform<
+  V extends VectorBase,
+  M extends MatrixBase<VectorBase>,
+>(this: V, m: M) {
+  const v = [...this];
+  let homogenous = false;
+  if (this.dimension === m.dimension - 1) {
+    v.push(1);
+    homogenous = true;
+  }
+  if (v.length !== m.dimension) {
+    throw new Error('Matrix dimension does not match the vector');
   }
   const array = [];
-  for (let i = 0; i < this.dimension; i++) {
+  for (let i = 0; i < v.length; i++) {
     array[i] = 0;
-    for (let j = 0; j < this.dimension; j++) {
-      array[i] += this.array[j] * m[j][i];
+    for (let j = 0; j < m.dimension; j++) {
+      array[i] += v[j] * m[j][i];
+    }
+  }
+  if (homogenous) {
+    const w = array.pop()!;
+    for (let i = 0; i < array.length; i++) {
+      array[i] /= w;
     }
   }
   this.array = array;
   return this;
+}
+
+export function createVectorStatics<
+  V extends VectorBase,
+  TM extends MatrixBase<VectorBase>,
+>(Ctor: new () => V) {
+  return {
+    clone(v: V) {
+      return v.clone();
+    },
+
+    equal(v0: V, v1: V) {
+      return v0.equal(v1);
+    },
+
+    add(v0: V, v1: V) {
+      return v0.clone().add(v1);
+    },
+
+    substract(v0: V, v1: V) {
+      return v0.clone().substract(v1);
+    },
+
+    scale(v: V, n: number) {
+      return v.clone().scale(n);
+    },
+
+    normalize(v: V) {
+      return v.clone().normalize();
+    },
+
+    dot(v0: V, v1: V) {
+      return v0.dot(v1);
+    },
+
+    transform(v: V, m: TM) {
+      return v.clone().transform(m);
+    },
+
+    zero() {
+      return new Ctor();
+    },
+  };
 }
