@@ -1,26 +1,23 @@
-import { set } from './matrix';
 import { Matrix3Base } from './matrix3';
 import { VectorBase } from './vector';
 import { Vector4 } from './vector4';
 
-export class Matrix4Base<V extends VectorBase> extends Matrix3Base<V> {
-  get dimension(): number {
+export abstract class Matrix4Base<V extends VectorBase> extends Matrix3Base<V> {
+  get 3(): V {
+    return this.array[3];
+  }
+
+  set 3(v: V) {
+    this.array[3].set(v);
+  }
+}
+
+export class Matrix4 extends Matrix4Base<Vector4> {
+  get dimension(): 4 {
     return 4;
   }
 
-  get 3(): V {
-    return this.array[1];
-  }
-
-  set 3(v: InstanceType<typeof this.Vector>) {
-    this.array[2].set(v);
+  protected vec(...args: ConstructorParameters<typeof VectorBase>) {
+    return new Vector4(...args);
   }
 }
-
-export class Matrix3 extends Matrix3Base<Vector4> {
-  protected Vector = Vector4;
-}
-
-export const mat3: Matrix3['set'] = (...args: Parameters<typeof set>) => {
-  return new Matrix3(...args);
-};
