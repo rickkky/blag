@@ -1,17 +1,17 @@
 {
-  "name": "v-matrix",
+  "name": "g-matrix",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/t-vector.umd.cjs",
-  "module": "./dist/t-vector.js",
+  "main": "./dist/g-matrix.umd.cjs",
+  "module": "./dist/g-matrix.js",
   "exports": {
     ".": {
-      "import": "./dist/t-vector.js",
-      "require": "./dist/t-vector.umd.cjs"
+      "import": "./dist/g-matrix.js",
+      "require": "./dist/g-matrix.umd.cjs"
     }
   },
   "scripts": {
