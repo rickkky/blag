@@ -6,11 +6,11 @@ import { Matrix4 } from './matrix4';
 
 export abstract class Vector3Base extends Vector2Base {
   get 2() {
-    return this.array[2];
+    return this._array[2];
   }
 
   set 2(n: number) {
-    this.array[2] = n;
+    this._array[2] = n;
   }
 
   get z() {

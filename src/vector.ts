@@ -1,7 +1,7 @@
 import { MatrixBase } from './matrix';
 
 export abstract class VectorBase {
-  protected array: number[] = [];
+  protected _array: number[] = [];
 
   constructor(...args: Parameters<typeof set>) {
     set.apply(this, args);
@@ -10,17 +10,17 @@ export abstract class VectorBase {
   abstract get dimension(): number;
 
   get size() {
-    return Math.hypot(...this.array);
+    return Math.hypot(...this._array);
   }
 
   [index: number]: number;
 
   get 0() {
-    return this.array[0];
+    return this._array[0];
   }
 
   set 0(n: number) {
-    this.array[0] = n;
+    this._array[0] = n;
   }
 
   get x() {
@@ -32,7 +32,7 @@ export abstract class VectorBase {
   }
 
   [Symbol.iterator]() {
-    return this.array[Symbol.iterator]();
+    return this._array[Symbol.iterator]();
   }
 
   set(...args: Parameters<typeof set>) {
@@ -42,37 +42,33 @@ export abstract class VectorBase {
   clone() {
     const proto = Object.getPrototypeOf(this);
     const Ctor = proto.constructor;
-    return new Ctor(this.array) as this;
-  }
-
-  toArray() {
-    return [...this.array];
+    return new Ctor(this._array) as this;
   }
 
   equal(v: typeof this) {
     return (
       this.dimension === v.dimension &&
-      this.array.every((n, i) => n === v.array[i])
+      this._array.every((n, i) => n === v._array[i])
     );
   }
 
   add(v: typeof this) {
     for (let i = 0; i < this.dimension; i++) {
-      this.array[i] += v.array[i];
+      this._array[i] += v._array[i];
     }
     return this;
   }
 
   substract(v: typeof this) {
     for (let i = 0; i < this.dimension; i++) {
-      this.array[i] -= v.array[i];
+      this._array[i] -= v._array[i];
     }
     return this;
   }
 
   scale(n: number) {
     for (let i = 0; i < this.dimension; i++) {
-      this.array[i] *= n;
+      this._array[i] *= n;
     }
     return this;
   }
@@ -85,7 +81,7 @@ export abstract class VectorBase {
   }
 
   dot(v: typeof this) {
-    return this.array.reduce((acc, n, i) => acc + n * v[i], 0);
+    return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
   }
 
   transform(m: MatrixBase<VectorBase>) {
@@ -94,6 +90,10 @@ export abstract class VectorBase {
 
   zero() {
     return this.set();
+  }
+
+  toArray() {
+    return [...this._array];
   }
 }
 
@@ -115,7 +115,7 @@ function set<V extends VectorBase>(
   for (let i = 0; i < this.dimension; i++) {
     array[i] = Number.isFinite(elements[i]) ? elements[i] : 0;
   }
-  this.array = array;
+  this._array = array;
   return this;
 }
 
@@ -145,7 +145,7 @@ export function transform<
       array[i] /= w;
     }
   }
-  this.array = array;
+  this._array = array;
   return this;
 }
 

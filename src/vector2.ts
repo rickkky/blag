@@ -4,11 +4,11 @@ import { Matrix3 } from './matrix3';
 
 export abstract class Vector2Base extends VectorBase {
   get 1() {
-    return this.array[1];
+    return this._array[1];
   }
 
   set 1(n: number) {
-    this.array[1] = n;
+    this._array[1] = n;
   }
 
   get y() {
