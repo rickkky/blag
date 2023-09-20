@@ -1,31 +1,29 @@
 import { VectorBase } from './vector';
 
 export abstract class MatrixBase<V extends VectorBase> {
-  protected array: V[] = [];
+  protected _array: V[] = [];
 
   constructor(...args: Parameters<typeof set>) {
     set.apply(this, args);
   }
 
-  get dimension(): number {
-    return 1;
-  }
+  abstract get dimension(): number;
 
   [index: number]: V;
 
   get 0() {
-    return this.array[0];
+    return this._array[0];
   }
 
   set 0(v: V) {
-    this.array[0] = v;
+    this._array[0] = v;
   }
 
   [Symbol.iterator]() {
     return this.toArray()[Symbol.iterator]();
   }
 
-  protected abstract vec(...args: ConstructorParameters<typeof VectorBase>): V;
+  protected abstract _vec(...args: ConstructorParameters<typeof VectorBase>): V;
 
   set(...args: Parameters<typeof set>) {
     return set.apply(this, args) as this;
@@ -34,22 +32,18 @@ export abstract class MatrixBase<V extends VectorBase> {
   clone() {
     const prototype = Object.getPrototypeOf(this);
     const Constructor = prototype.constructor;
-    return new Constructor(...this.array) as this;
-  }
-
-  toArray() {
-    return this.array.map((v) => v.toArray()).flat();
+    return new Constructor(...this._array) as this;
   }
 
   equal(m: this) {
     return (
       this.dimension === m.dimension &&
-      this.array.every((v, i) => v.equal(m.array[i]))
+      this._array.every((v, i) => v.equal(m._array[i]))
     );
   }
 
   /**
-   * `A.multiply(B)` means matrix multiplication B * A, not A * B.
+   * Calling `A.multiply(B)` represents the matrix multiplication B * A.
    */
   multiply(m: this) {
     const nums = [];
@@ -64,7 +58,7 @@ export abstract class MatrixBase<V extends VectorBase> {
     const array: number[] = new Array(this.dimension ** 2).fill(0);
     for (let i = 0; i < this.dimension; i++) {
       for (let j = 0; j < this.dimension; j++) {
-        array[i * this.dimension + j] = this.array[j][i];
+        array[i * this.dimension + j] = this._array[j][i];
       }
     }
     return this.set(array);
@@ -73,9 +67,21 @@ export abstract class MatrixBase<V extends VectorBase> {
   identity() {
     for (let i = 0; i < this.dimension; i++) {
       for (let j = 0; j < this.dimension; j++) {
-        this.array[i][j] = i === j ? 1 : 0;
+        this._array[i][j] = i === j ? 1 : 0;
       }
     }
+  }
+
+  toArray() {
+    return this.toColumnArray();
+  }
+
+  toColumnArray() {
+    return this._array.map((v) => v.toArray()).flat();
+  }
+
+  toRowMajorArray() {
+    return this.clone().transpose().toColumnArray();
   }
 }
 
@@ -91,9 +97,9 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
   } else if (args[0] instanceof VectorBase) {
     nums = (args as V[]).map((v) => [...v]).flat();
   }
-  this.array = [];
+  this._array = [];
   for (let i = 0; i < this.dimension; i++) {
-    this.array[i] = this.vec(
+    this._array[i] = this._vec(
       nums.slice(i * this.dimension, (i + 1) * this.dimension),
     );
   }

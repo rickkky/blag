@@ -4,11 +4,11 @@ import { Vector4 } from './vector4';
 
 export abstract class Matrix4Base<V extends VectorBase> extends Matrix3Base<V> {
   get 3(): V {
-    return this.array[3];
+    return this._array[3];
   }
 
   set 3(v: V) {
-    this.array[3].set(v);
+    this._array[3].set(v);
   }
 }
 
@@ -17,7 +17,7 @@ export class Matrix4 extends Matrix4Base<Vector4> {
     return 4;
   }
 
-  protected vec(...args: ConstructorParameters<typeof VectorBase>) {
+  protected _vec(...args: ConstructorParameters<typeof VectorBase>) {
     return new Vector4(...args);
   }
 }
