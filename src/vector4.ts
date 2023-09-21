@@ -246,8 +246,8 @@ export class Vector4 extends Vector4Base {
     return super.set(...args);
   }
 
-  transform(m: Matrix4) {
-    return super.transform(m);
+  transform(m: Matrix4, target?: this) {
+    return super.transform(m, target);
   }
 }
 

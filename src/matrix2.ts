@@ -20,4 +20,8 @@ export class Matrix2 extends Matrix2Base<Vector2> {
   protected _vec(...args: ConstructorParameters<typeof VectorBase>) {
     return new Vector2(...args);
   }
+
+  determinant() {
+    return this[0][0] * this[1][1] - this[0][1] * this[1][0];
+  }
 }

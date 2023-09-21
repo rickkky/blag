@@ -1,4 +1,5 @@
 import { MatrixBase } from './matrix';
+import { EPSILON } from './constant';
 
 export abstract class VectorBase {
   protected _array: number[] = [];
@@ -45,47 +46,62 @@ export abstract class VectorBase {
     return new Ctor(this._array) as this;
   }
 
-  equal(v: typeof this) {
+  equals(v: this, epsilon = EPSILON[0]) {
     return (
       this.dimension === v.dimension &&
-      this._array.every((n, i) => n === v._array[i])
+      this._array.every((n, i) => Math.abs(n - v[i]) <= epsilon)
     );
   }
 
-  add(v: typeof this) {
-    for (let i = 0; i < this.dimension; i++) {
-      this._array[i] += v._array[i];
+  add(v: this, target?: this) {
+    if (!target) {
+      target = this.clone();
     }
-    return this;
+    for (let i = 0; i < target.dimension; i++) {
+      target._array[i] += v._array[i];
+    }
+    return target;
   }
 
-  substract(v: typeof this) {
-    for (let i = 0; i < this.dimension; i++) {
-      this._array[i] -= v._array[i];
+  substract(v: this, target?: this) {
+    if (!target) {
+      target = this.clone();
     }
-    return this;
+    for (let i = 0; i < target.dimension; i++) {
+      target._array[i] -= v._array[i];
+    }
+    return target;
   }
 
-  scale(n: number) {
-    for (let i = 0; i < this.dimension; i++) {
-      this._array[i] *= n;
+  scale(n: number, target?: this) {
+    if (!target) {
+      target = this.clone();
     }
-    return this;
+    for (let i = 0; i < target.dimension; i++) {
+      target._array[i] *= n;
+    }
+    return target;
   }
 
-  normalize() {
-    if (this.size === 0) {
-      throw new Error('Cannot normalize a zero vector');
-    }
-    return this.scale(1 / this.size);
-  }
-
-  dot(v: typeof this) {
+  dot(v: this) {
     return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
   }
 
-  transform(m: MatrixBase<VectorBase>) {
-    return transform.call(this, m) as this;
+  transform(m: MatrixBase, target?: this) {
+    if (!target) {
+      target = this.clone();
+    }
+    return transform.call(target, m);
+  }
+
+  normalize(target: this | null = this) {
+    if (this.size === 0) {
+      throw new Error('Cannot normalize a zero vector');
+    }
+    if (!target) {
+      target = this.clone();
+    }
+    return target.scale(1 / target.size);
   }
 
   zero() {
@@ -101,28 +117,28 @@ function set<V extends VectorBase>(
   this: V,
   ...args: (number | number[] | VectorBase | undefined)[]
 ) {
-  const elements = [];
+  const list = [];
   for (const arg of args) {
     if (typeof arg === 'number') {
-      elements.push(arg);
+      list.push(arg);
     } else if (arg instanceof VectorBase || Array.isArray(arg)) {
-      elements.push(...arg);
+      list.push(...arg);
     } else {
-      elements.push(0);
+      list.push(0);
     }
   }
   const array = [];
   for (let i = 0; i < this.dimension; i++) {
-    array[i] = Number.isFinite(elements[i]) ? elements[i] : 0;
+    array[i] = Number.isFinite(list[i]) ? list[i] : 0;
   }
   this._array = array;
   return this;
 }
 
-export function transform<
-  V extends VectorBase,
-  M extends MatrixBase<VectorBase>,
->(this: V, m: M) {
+function transform<V extends VectorBase, M extends MatrixBase<VectorBase>>(
+  this: V,
+  m: M,
+) {
   const v = [...this];
   let homogenous = false;
   if (this.dimension === m.dimension - 1) {
@@ -158,28 +174,28 @@ export function createVectorStatics<
       return v.clone();
     },
 
-    equal(v0: V, v1: V) {
-      return v0.equal(v1);
+    equal(v1: V, v2: V) {
+      return v1.equals(v2);
     },
 
-    add(v0: V, v1: V) {
-      return v0.clone().add(v1);
+    add(v1: V, v2: V) {
+      return v1.add(v2);
     },
 
-    substract(v0: V, v1: V) {
-      return v0.clone().substract(v1);
+    substract(v1: V, v2: V) {
+      return v1.substract(v2);
     },
 
     scale(v: V, n: number) {
-      return v.clone().scale(n);
+      return v.scale(n);
     },
 
     normalize(v: V) {
-      return v.clone().normalize();
+      return v.normalize();
     },
 
-    dot(v0: V, v1: V) {
-      return v0.dot(v1);
+    dot(v1: V, v2: V) {
+      return v1.dot(v2);
     },
 
     transform(v: V, m: TM) {

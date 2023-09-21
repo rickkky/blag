@@ -87,17 +87,20 @@ export class Vector3 extends Vector3Base {
     return super.set(...args);
   }
 
-  transform(m: Matrix3 | Matrix4) {
-    return super.transform(m);
+  transform(m: Matrix3 | Matrix4, target?: this) {
+    return super.transform(m, target);
   }
 
-  cross(v: Vector3) {
-    const [x0, y0, z0] = this;
+  cross(v: this, target?: this) {
+    if (!target) {
+      target = this;
+    }
+    const [x0, y0, z0] = target;
     const [x1, y1, z1] = v;
-    this[0] = y0 * z1 - z0 * y1;
-    this[1] = z0 * x1 - x0 * z1;
-    this[2] = x0 * y1 - y0 * x1;
-    return this;
+    target[0] = y0 * z1 - z0 * y1;
+    target[1] = z0 * x1 - x0 * z1;
+    target[2] = x0 * y1 - y0 * x1;
+    return target;
   }
 }
 

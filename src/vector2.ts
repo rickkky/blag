@@ -49,8 +49,8 @@ export class Vector2 extends Vector2Base {
     return super.set(...args);
   }
 
-  transform(m: Matrix2 | Matrix3) {
-    return super.transform(m);
+  transform(m: Matrix2 | Matrix3, target?: this) {
+    return super.transform(m, target);
   }
 }
 

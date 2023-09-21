@@ -1,6 +1,7 @@
 import { VectorBase } from './vector';
+import { EPSILON } from './constant';
 
-export abstract class MatrixBase<V extends VectorBase> {
+export abstract class MatrixBase<V extends VectorBase = VectorBase> {
   protected _array: V[] = [];
 
   constructor(...args: Parameters<typeof set>) {
@@ -35,33 +36,41 @@ export abstract class MatrixBase<V extends VectorBase> {
     return new Constructor(...this._array) as this;
   }
 
-  equal(m: this) {
+  equals(m: this, epsilon = EPSILON[0]) {
     return (
       this.dimension === m.dimension &&
-      this._array.every((v, i) => v.equal(m._array[i]))
+      this._array.every((v, i) => v.equals(m._array[i], epsilon))
     );
   }
 
   /**
    * Calling `A.multiply(B)` represents the matrix multiplication B * A.
    */
-  multiply(m: this) {
+  multiply(m: this, target?: this) {
+    if (!target) {
+      target = this.clone();
+    }
     const nums = [];
-    for (let i = 0; i < this.dimension; i++) {
-      const v = this[i].clone().transform(m);
+    for (let i = 0; i < target.dimension; i++) {
+      const v = target[i].clone().transform(m);
       nums.push(...v);
     }
-    return this.set(nums);
+    return target.set(nums);
   }
 
-  transpose() {
-    const array: number[] = new Array(this.dimension ** 2).fill(0);
-    for (let i = 0; i < this.dimension; i++) {
-      for (let j = 0; j < this.dimension; j++) {
-        array[i * this.dimension + j] = this._array[j][i];
+  abstract determinant(): number;
+
+  transpose(target?: this) {
+    if (!target) {
+      target = this.clone();
+    }
+    const array: number[] = [];
+    for (let i = 0; i < target.dimension; i++) {
+      for (let j = 0; j < target.dimension; j++) {
+        array[i * target.dimension + j] = target[j][i];
       }
     }
-    return this.set(array);
+    return target.set(array);
   }
 
   identity() {
