@@ -1,5 +1,5 @@
 import { VectorBase } from './vector';
-import { EPSILON } from './constant';
+import { PRECISION } from './constant';
 
 export abstract class MatrixBase<V extends VectorBase = VectorBase> {
   protected _array: V[] = [];
@@ -32,24 +32,21 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
 
   clone() {
     const prototype = Object.getPrototypeOf(this);
-    const Constructor = prototype.constructor;
-    return new Constructor(...this._array) as this;
+    const Ctor = prototype.constructor;
+    return new Ctor(...this._array) as this;
   }
 
-  equals(m: this, epsilon = EPSILON[0]) {
+  equals(m: this, precision = PRECISION[0]) {
     return (
       this.dimension === m.dimension &&
-      this._array.every((v, i) => v.equals(m._array[i], epsilon))
+      this._array.every((v, i) => v.equals(m._array[i], precision))
     );
   }
 
   /**
    * Calling `A.multiply(B)` represents the matrix multiplication B * A.
    */
-  multiply(m: this, target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  multiply(m: this, target: this = this) {
     const nums = [];
     for (let i = 0; i < target.dimension; i++) {
       const v = target[i].clone().transform(m);
@@ -58,12 +55,7 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
     return target.set(nums);
   }
 
-  abstract determinant(): number;
-
-  transpose(target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  transpose(target: this = this) {
     const array: number[] = [];
     for (let i = 0; i < target.dimension; i++) {
       for (let j = 0; j < target.dimension; j++) {
@@ -81,16 +73,18 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
     }
   }
 
+  abstract determinant(): number;
+
   toArray() {
-    return this.toColumnArray();
+    return this.toColMajorArray();
   }
 
-  toColumnArray() {
+  toColMajorArray() {
     return this._array.map((v) => v.toArray()).flat();
   }
 
   toRowMajorArray() {
-    return this.clone().transpose().toColumnArray();
+    return this.clone().transpose().toColMajorArray();
   }
 }
 

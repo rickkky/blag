@@ -91,10 +91,7 @@ export class Vector3 extends Vector3Base {
     return super.transform(m, target);
   }
 
-  cross(v: this, target?: this) {
-    if (!target) {
-      target = this;
-    }
+  cross(v: this, target: this = this) {
     const [x0, y0, z0] = target;
     const [x1, y1, z1] = v;
     target[0] = y0 * z1 - z0 * y1;

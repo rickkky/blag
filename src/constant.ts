@@ -1,5 +1,5 @@
 // prettier-ignore
-export const EPSILON = [
+export const PRECISION = [
   0,
   1e-1,
   1e-2,

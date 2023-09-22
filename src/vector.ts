@@ -1,5 +1,5 @@
 import { MatrixBase } from './matrix';
-import { EPSILON } from './constant';
+import { PRECISION } from './constant';
 
 export abstract class VectorBase {
   protected _array: number[] = [];
@@ -46,66 +46,51 @@ export abstract class VectorBase {
     return new Ctor(this._array) as this;
   }
 
-  equals(v: this, epsilon = EPSILON[0]) {
+  equals(v: this, precision = PRECISION[0]) {
     return (
       this.dimension === v.dimension &&
-      this._array.every((n, i) => Math.abs(n - v[i]) <= epsilon)
+      this._array.every((n, i) => Math.abs(n - v[i]) <= precision)
     );
   }
 
-  add(v: this, target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  add(v: this, target: this = this) {
     for (let i = 0; i < target.dimension; i++) {
-      target._array[i] += v._array[i];
+      target[i] += v[i];
     }
     return target;
   }
 
-  substract(v: this, target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  substract(v: this, target: this = this) {
     for (let i = 0; i < target.dimension; i++) {
-      target._array[i] -= v._array[i];
+      target[i] -= v[i];
     }
     return target;
   }
 
-  scale(n: number, target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  scale(n: number, target: this = this) {
     for (let i = 0; i < target.dimension; i++) {
-      target._array[i] *= n;
+      target[i] *= n;
     }
     return target;
   }
 
-  dot(v: this) {
-    return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
-  }
-
-  transform(m: MatrixBase, target?: this) {
-    if (!target) {
-      target = this.clone();
-    }
+  transform(m: MatrixBase, target: this = this) {
     return transform.call(target, m);
   }
 
-  normalize(target: this | null = this) {
+  normalize(target: this = this) {
     if (this.size === 0) {
       throw new Error('Cannot normalize a zero vector');
-    }
-    if (!target) {
-      target = this.clone();
     }
     return target.scale(1 / target.size);
   }
 
   zero() {
     return this.set();
+  }
+
+  dot(v: this) {
+    return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
   }
 
   toArray() {
@@ -174,36 +159,36 @@ export function createVectorStatics<
       return v.clone();
     },
 
-    equal(v1: V, v2: V) {
-      return v1.equals(v2);
+    equals(v1: V, v2: V, precision?: number) {
+      return v1.equals(v2, precision);
     },
 
     add(v1: V, v2: V) {
-      return v1.add(v2);
+      return v1.clone().add(v2);
     },
 
     substract(v1: V, v2: V) {
-      return v1.substract(v2);
+      return v1.clone().substract(v2);
     },
 
     scale(v: V, n: number) {
-      return v.scale(n);
-    },
-
-    normalize(v: V) {
-      return v.normalize();
-    },
-
-    dot(v1: V, v2: V) {
-      return v1.dot(v2);
+      return v.clone().scale(n);
     },
 
     transform(v: V, m: TM) {
       return v.clone().transform(m);
     },
 
+    normalize(v: V) {
+      return v.clone().normalize();
+    },
+
     zero() {
       return new Ctor();
+    },
+
+    dot(v1: V, v2: V) {
+      return v1.dot(v2);
     },
   };
 }
