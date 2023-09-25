@@ -3,8 +3,7 @@ import { PRECISION } from '/src/constant';
 import { vec2 } from '/src/vector2';
 import { vec3 } from '/src/vector3';
 import { Vector4, vec4 } from '/src/vector4';
-import { expectVector2 } from './vector2.test';
-import { expectVector3 } from './vector3.test';
+import { Matrix4 } from '/src/matrix4';
 
 export const expectVector4 = (v: Vector4, [x, y, z, w]: number[]) => {
   expect(v.dimension).toBe(4);
@@ -98,73 +97,6 @@ describe('vector4', () => {
     expectVector4(vec4().set(0, 1, vec2(2, 3)), [0, 1, 2, 3]);
   });
 
-  test('group getter', () => {
-    const v = vec4(0, 1, 2, 3);
-
-    expectVector2(v.xy, [0, 1]);
-    expectVector2(v.xz, [0, 2]);
-    expectVector2(v.xw, [0, 3]);
-    expectVector2(v.yx, [1, 0]);
-    expectVector2(v.yz, [1, 2]);
-    expectVector2(v.yw, [1, 3]);
-    expectVector2(v.zx, [2, 0]);
-    expectVector2(v.zy, [2, 1]);
-    expectVector2(v.zw, [2, 3]);
-    expectVector2(v.wx, [3, 0]);
-    expectVector2(v.wy, [3, 1]);
-    expectVector2(v.wz, [3, 2]);
-
-    expectVector3(v.xyz, [0, 1, 2]);
-    expectVector3(v.xyw, [0, 1, 3]);
-    expectVector3(v.xzy, [0, 2, 1]);
-    expectVector3(v.xzw, [0, 2, 3]);
-    expectVector3(v.xwy, [0, 3, 1]);
-    expectVector3(v.xwz, [0, 3, 2]);
-    expectVector3(v.yxz, [1, 0, 2]);
-    expectVector3(v.yxw, [1, 0, 3]);
-    expectVector3(v.yzx, [1, 2, 0]);
-    expectVector3(v.yzw, [1, 2, 3]);
-    expectVector3(v.ywx, [1, 3, 0]);
-    expectVector3(v.ywz, [1, 3, 2]);
-    expectVector3(v.zxy, [2, 0, 1]);
-    expectVector3(v.zxw, [2, 0, 3]);
-    expectVector3(v.zyx, [2, 1, 0]);
-    expectVector3(v.zyw, [2, 1, 3]);
-    expectVector3(v.zwx, [2, 3, 0]);
-    expectVector3(v.zwy, [2, 3, 1]);
-    expectVector3(v.wxy, [3, 0, 1]);
-    expectVector3(v.wxz, [3, 0, 2]);
-    expectVector3(v.wyx, [3, 1, 0]);
-    expectVector3(v.wyz, [3, 1, 2]);
-    expectVector3(v.wzx, [3, 2, 0]);
-    expectVector3(v.wzy, [3, 2, 1]);
-
-    expectVector4(v.xyzw, [0, 1, 2, 3]);
-    expectVector4(v.xywz, [0, 1, 3, 2]);
-    expectVector4(v.xzyw, [0, 2, 1, 3]);
-    expectVector4(v.xzwy, [0, 2, 3, 1]);
-    expectVector4(v.xwyz, [0, 3, 1, 2]);
-    expectVector4(v.xwzy, [0, 3, 2, 1]);
-    expectVector4(v.yxzw, [1, 0, 2, 3]);
-    expectVector4(v.yxwz, [1, 0, 3, 2]);
-    expectVector4(v.yzxw, [1, 2, 0, 3]);
-    expectVector4(v.yzwx, [1, 2, 3, 0]);
-    expectVector4(v.ywxz, [1, 3, 0, 2]);
-    expectVector4(v.ywzx, [1, 3, 2, 0]);
-    expectVector4(v.zxyw, [2, 0, 1, 3]);
-    expectVector4(v.zxwy, [2, 0, 3, 1]);
-    expectVector4(v.zyxw, [2, 1, 0, 3]);
-    expectVector4(v.zywx, [2, 1, 3, 0]);
-    expectVector4(v.zwxy, [2, 3, 0, 1]);
-    expectVector4(v.zwyx, [2, 3, 1, 0]);
-    expectVector4(v.wxyz, [3, 0, 1, 2]);
-    expectVector4(v.wxzy, [3, 0, 2, 1]);
-    expectVector4(v.wyxz, [3, 1, 0, 2]);
-    expectVector4(v.wyzx, [3, 1, 2, 0]);
-    expectVector4(v.wzxy, [3, 2, 0, 1]);
-    expectVector4(v.wzyx, [3, 2, 1, 0]);
-  });
-
   test('iterator', () => {
     const v = vec4(0, 1, 2, 3);
     expect([...v]).toEqual([0, 1, 2, 3]);
@@ -226,7 +158,14 @@ describe('vector4', () => {
     expectVector4(v, [0, 2, 4, 6]);
   });
 
-  test.todo('transform');
+  test('transform', () => {
+    const v = vec4(0, 1, 2, 3);
+    const m = new Matrix4(0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0);
+    expectVector4(vec4.transform(v, m), [3, 2, 1, 0]);
+    expectVector4(v, [0, 1, 2, 3]);
+    expectVector4(v.transform(m), [3, 2, 1, 0]);
+    expectVector4(v, [3, 2, 1, 0]);
+  });
 
   test('normalize', () => {
     const v = vec4(0, 0, 0, 2);
@@ -234,6 +173,8 @@ describe('vector4', () => {
     expectVector4(v, [0, 0, 0, 2]);
     expectVector4(v.normalize(), [0, 0, 0, 1]);
     expectVector4(v, [0, 0, 0, 1]);
+
+    expect(() => vec4(0, 0, 0, 0).normalize()).toThrowError();
   });
 
   test('zero', () => {

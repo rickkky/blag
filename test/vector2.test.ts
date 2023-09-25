@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest';
 import { PRECISION } from '/src/constant';
 import { Vector2, vec2 } from '/src/vector2';
+import { Matrix2 } from '/src/matrix2';
+import { Matrix3 } from '/src/matrix3';
 
 export const expectVector2 = (v: Vector2, [x, y]: number[]) => {
   expect(v.dimension).toBe(2);
@@ -33,15 +35,15 @@ describe('vector2', () => {
   });
 
   test('setter', () => {
-    const a = vec2();
-    a[0] = 0;
-    a[1] = 1;
-    expectVector2(a, [0, 1]);
+    const v0 = vec2();
+    v0[0] = 0;
+    v0[1] = 1;
+    expectVector2(v0, [0, 1]);
 
-    const b = vec2();
-    b.x = 0;
-    b.y = 1;
-    expectVector2(b, [0, 1]);
+    const v1 = vec2();
+    v1.x = 0;
+    v1.y = 1;
+    expectVector2(v1, [0, 1]);
 
     expectVector2(vec2().set(0, 1), [0, 1]);
 
@@ -50,63 +52,57 @@ describe('vector2', () => {
     expectVector2(vec2().set(vec2(0, 1)), [0, 1]);
   });
 
-  test('group getter', () => {
-    const v = vec2(0, 1);
-    expectVector2(v.xy, [0, 1]);
-    expectVector2(v.yx, [1, 0]);
-  });
-
   test('iterator', () => {
     const v = vec2(0, 1);
     expect([...v]).toEqual([0, 1]);
   });
 
   test('clone', () => {
-    const a = vec2(0, 1);
-    const b = vec2.clone(a);
-    expect(b).not.toBe(a);
-    expectVector2(b, [0, 1]);
-    const c = a.clone();
-    expect(c).not.toBe(a);
-    expectVector2(c, [0, 1]);
+    const v0 = vec2(0, 1);
+    const v1 = vec2.clone(v0);
+    expect(v1).not.toBe(v0);
+    expectVector2(v1, [0, 1]);
+    const v2 = v0.clone();
+    expect(v2).not.toBe(v0);
+    expectVector2(v2, [0, 1]);
   });
 
   test('equals', () => {
-    const a = vec2(0, 1);
+    const v0 = vec2(0, 1);
 
-    const b = vec2(0, 1);
-    expect(vec2.equals(a, b)).toBe(true);
-    expect(a.equals(b)).toBe(true);
+    const v1 = vec2(0, 1);
+    expect(vec2.equals(v0, v1)).toBe(true);
+    expect(v0.equals(v1)).toBe(true);
 
-    const c = vec2(1, 0);
-    expect(vec2.equals(a, c)).toBe(false);
-    expect(a.equals(c)).toBe(false);
+    const v2 = vec2(1, 0);
+    expect(vec2.equals(v0, v2)).toBe(false);
+    expect(v0.equals(v2)).toBe(false);
 
-    const d = vec2(PRECISION[15], 1);
-    expect(vec2.equals(a, d, PRECISION[14])).toBe(true);
-    expect(a.equals(d, PRECISION[14])).toBe(true);
-    expect(vec2.equals(a, d, PRECISION[15])).toBe(true);
-    expect(a.equals(d, PRECISION[15])).toBe(true);
-    expect(vec2.equals(a, d, PRECISION[16])).toBe(false);
-    expect(a.equals(d, PRECISION[16])).toBe(false);
+    const v3 = vec2(PRECISION[15], 1);
+    expect(vec2.equals(v0, v3, PRECISION[14])).toBe(true);
+    expect(v0.equals(v3, PRECISION[14])).toBe(true);
+    expect(vec2.equals(v0, v3, PRECISION[15])).toBe(true);
+    expect(v0.equals(v3, PRECISION[15])).toBe(true);
+    expect(vec2.equals(v0, v3, PRECISION[16])).toBe(false);
+    expect(v0.equals(v3, PRECISION[16])).toBe(false);
   });
 
   test('add', () => {
-    const a = vec2(0, 0);
-    const b = vec2(0, 1);
-    expectVector2(vec2.add(a, b), [0, 1]);
-    expectVector2(a, [0, 0]);
-    expectVector2(a.add(b), [0, 1]);
-    expectVector2(a, [0, 1]);
+    const v0 = vec2(0, 0);
+    const v1 = vec2(0, 1);
+    expectVector2(vec2.add(v0, v1), [0, 1]);
+    expectVector2(v0, [0, 0]);
+    expectVector2(v0.add(v1), [0, 1]);
+    expectVector2(v0, [0, 1]);
   });
 
   test('substract', () => {
-    const a = vec2(0, 1);
-    const b = vec2(0, 1);
-    expectVector2(vec2.substract(a, b), [0, 0]);
-    expectVector2(a, [0, 1]);
-    expectVector2(a.substract(b), [0, 0]);
-    expectVector2(a, [0, 0]);
+    const v0 = vec2(0, 1);
+    const v1 = vec2(0, 1);
+    expectVector2(vec2.substract(v0, v1), [0, 0]);
+    expectVector2(v0, [0, 1]);
+    expectVector2(v0.substract(v1), [0, 0]);
+    expectVector2(v0, [0, 0]);
   });
 
   test('scale', () => {
@@ -117,7 +113,30 @@ describe('vector2', () => {
     expectVector2(v, [0, 2]);
   });
 
-  test.todo('transform');
+  test('transform', () => {
+    const v0 = vec2(0, 1);
+    // prettier-ignore
+    const m0 = new Matrix2(
+      0, 1,
+      1, 0
+    );
+    expectVector2(vec2.transform(v0, m0), [1, 0]);
+    expectVector2(v0, [0, 1]);
+    expectVector2(v0.transform(m0), [1, 0]);
+    expectVector2(v0, [1, 0]);
+
+    const v1 = vec2(0, 1);
+    // prettier-ignore
+    const m1 = new Matrix3(
+      0, 1, 0,
+      1, 0, 0,
+      1, 1, 1,
+    )
+    expectVector2(vec2.transform(v1, m1), [2, 1]);
+    expectVector2(v1, [0, 1]);
+    expectVector2(v1.transform(m1), [2, 1]);
+    expectVector2(v1, [2, 1]);
+  });
 
   test('normalize', () => {
     const v = vec2(0, 2);
@@ -125,6 +144,8 @@ describe('vector2', () => {
     expectVector2(v, [0, 2]);
     expectVector2(v.normalize(), [0, 1]);
     expectVector2(v, [0, 1]);
+
+    expect(() => vec2(0, 0).normalize()).toThrowError();
   });
 
   test('zero', () => {
@@ -135,10 +156,10 @@ describe('vector2', () => {
   });
 
   test('dot', () => {
-    const a = vec2(0, 1);
-    const b = vec2(2, 3);
-    expect(vec2.dot(a, b)).toBe(3);
-    expect(a.dot(b)).toBe(3);
+    const v0 = vec2(0, 1);
+    const v1 = vec2(2, 3);
+    expect(vec2.dot(v0, v1)).toBe(3);
+    expect(v0.dot(v1)).toBe(3);
   });
 
   test('toArray', () => {
