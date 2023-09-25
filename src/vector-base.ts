@@ -16,22 +16,6 @@ export abstract class VectorBase {
 
   [index: number]: number;
 
-  get 0() {
-    return this._array[0];
-  }
-
-  set 0(n: number) {
-    this._array[0] = n;
-  }
-
-  get x() {
-    return this[0];
-  }
-
-  set x(n: number) {
-    this[0] = n;
-  }
-
   [Symbol.iterator]() {
     return this._array[Symbol.iterator]();
   }
@@ -74,8 +58,8 @@ export abstract class VectorBase {
     return target;
   }
 
-  transform(m: MatrixBase, target: this = this) {
-    return transform.call(target, m);
+  transform(m: MatrixBase<any>, target: this = this) {
+    return transform.call(target, m) as this;
   }
 
   normalize(target: this = this) {
@@ -98,25 +82,37 @@ export abstract class VectorBase {
   }
 }
 
-function set<V extends VectorBase>(
-  this: V,
-  ...args: (number | number[] | VectorBase | undefined)[]
-) {
-  const list = [];
-  for (const arg of args) {
-    if (typeof arg === 'number') {
-      list.push(arg);
-    } else if (arg instanceof VectorBase || Array.isArray(arg)) {
-      list.push(...arg);
+export type VectorArgs = (number | Iterable<number> | undefined)[];
+
+function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
+  const list: number[] = [];
+  out: for (const arg of args) {
+    if (Number.isFinite(arg)) {
+      list.push(arg as number);
+    } else if (
+      arg &&
+      typeof arg === 'object' &&
+      typeof arg[Symbol.iterator] === 'function'
+    ) {
+      for (const n of arg) {
+        list.push(Number.isFinite(n) ? n : 0);
+        if (list.length >= this.dimension) {
+          break out;
+        }
+      }
     } else {
       list.push(0);
     }
+    if (list.length >= this.dimension) {
+      break;
+    }
   }
-  const array = [];
-  for (let i = 0; i < this.dimension; i++) {
-    array[i] = Number.isFinite(list[i]) ? list[i] : 0;
+  if (list.length < this.dimension) {
+    for (let i = list.length; i < this.dimension; i++) {
+      list.push(0);
+    }
   }
-  this._array = array;
+  this._array = list;
   return this;
 }
 
@@ -148,47 +144,4 @@ function transform<V extends VectorBase, M extends MatrixBase<VectorBase>>(
   }
   this._array = array;
   return this;
-}
-
-export function createVectorStatics<
-  V extends VectorBase,
-  TM extends MatrixBase<VectorBase>,
->(Ctor: new () => V) {
-  return {
-    clone(v: V) {
-      return v.clone();
-    },
-
-    equals(v1: V, v2: V, precision?: number) {
-      return v1.equals(v2, precision);
-    },
-
-    add(v1: V, v2: V) {
-      return v1.clone().add(v2);
-    },
-
-    substract(v1: V, v2: V) {
-      return v1.clone().substract(v2);
-    },
-
-    scale(v: V, n: number) {
-      return v.clone().scale(n);
-    },
-
-    transform(v: V, m: TM) {
-      return v.clone().transform(m);
-    },
-
-    normalize(v: V) {
-      return v.clone().normalize();
-    },
-
-    zero() {
-      return new Ctor();
-    },
-
-    dot(v1: V, v2: V) {
-      return v1.dot(v2);
-    },
-  };
 }

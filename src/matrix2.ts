@@ -1,4 +1,4 @@
-import { VectorBase } from './vector';
+import { VectorBase } from './vector-base';
 import { Vector2 } from './vector2';
 import { MatrixBase } from './matrix';
 

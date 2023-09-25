@@ -1,6 +1,6 @@
 import { MatrixBase } from './matrix';
 import { Matrix3Base, Matrix3 } from './matrix3';
-import { VectorBase } from './vector';
+import { VectorBase } from './vector-base';
 import { Vector4 } from './vector4';
 
 export abstract class Matrix4Base<

@@ -1,4 +1,4 @@
-import { VectorBase } from './vector';
+import { VectorBase } from './vector-base';
 import { PRECISION } from './constant';
 
 export abstract class MatrixBase<V extends VectorBase = VectorBase> {
