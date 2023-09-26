@@ -1,5 +1,7 @@
-import { MatrixBase } from './matrix';
+import { MatrixBase } from './matrix-base';
 import { PRECISION } from './constant';
+
+export type VectorArgs = (number | Iterable<number>)[];
 
 export abstract class VectorBase {
   protected _array: number[] = [];
@@ -24,10 +26,8 @@ export abstract class VectorBase {
     return set.apply(this, args) as this;
   }
 
-  clone() {
-    const proto = Object.getPrototypeOf(this);
-    const Ctor = proto.constructor;
-    return new Ctor(this._array) as this;
+  clone(target: this = new (Object.getPrototypeOf(this).constructor)()) {
+    return target.set(this);
   }
 
   equals(v: this, precision = PRECISION[0]) {
@@ -58,7 +58,7 @@ export abstract class VectorBase {
     return target;
   }
 
-  transform(m: MatrixBase<any>, target: this = this) {
+  transform(m: any, target: this = this) {
     return transform.call(target, m) as this;
   }
 
@@ -81,8 +81,6 @@ export abstract class VectorBase {
     return [...this._array];
   }
 }
-
-export type VectorArgs = (number | Iterable<number> | undefined)[];
 
 function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
   const list: number[] = [];

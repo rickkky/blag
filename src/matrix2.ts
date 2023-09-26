@@ -1,23 +1,13 @@
-import { VectorBase } from './vector-base';
+import { VectorArgs } from './vector-base';
 import { Vector2 } from './vector2';
-import { MatrixBase } from './matrix';
-
-export abstract class Matrix2Base<V extends VectorBase> extends MatrixBase<V> {
-  get 1() {
-    return this._array[1];
-  }
-
-  set 1(v: V) {
-    this._array[1].set(v);
-  }
-}
+import { Matrix2Base } from './matrix2-base';
 
 export class Matrix2 extends Matrix2Base<Vector2> {
   get dimension(): 2 {
     return 2;
   }
 
-  protected _vec(...args: ConstructorParameters<typeof VectorBase>) {
+  protected _vec(...args: VectorArgs) {
     return new Vector2(...args);
   }
 

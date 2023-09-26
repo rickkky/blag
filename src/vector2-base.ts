@@ -1,5 +1,4 @@
 import { VectorBase } from './vector-base';
-import { Vector2 } from './vector2';
 
 export abstract class Vector2Base extends VectorBase {
   get 0() {

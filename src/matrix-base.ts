@@ -1,10 +1,12 @@
-import { VectorBase } from './vector-base';
+import { VectorArgs, VectorBase } from './vector-base';
 import { PRECISION } from './constant';
+
+export type MatrixArgs = number[] | Iterable<number>[] | Iterable<VectorBase>[];
 
 export abstract class MatrixBase<V extends VectorBase = VectorBase> {
   protected _array: V[] = [];
 
-  constructor(...args: Parameters<typeof set>) {
+  constructor(...args: MatrixArgs) {
     set.apply(this, args);
   }
 
@@ -12,28 +14,18 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
 
   [index: number]: V;
 
-  get 0() {
-    return this._array[0];
-  }
-
-  set 0(v: V) {
-    this._array[0] = v;
-  }
-
   [Symbol.iterator]() {
     return this.toArray()[Symbol.iterator]();
   }
 
-  protected abstract _vec(...args: ConstructorParameters<typeof VectorBase>): V;
+  protected abstract _vec(...args: VectorArgs): V;
 
-  set(...args: Parameters<typeof set>) {
+  set(...args: MatrixArgs) {
     return set.apply(this, args) as this;
   }
 
-  clone() {
-    const prototype = Object.getPrototypeOf(this);
-    const Ctor = prototype.constructor;
-    return new Ctor(...this._array) as this;
+  clone(target: this = new (Object.getPrototypeOf(this).constructor)()) {
+    return target.set(this);
   }
 
   equals(m: this, precision = PRECISION[0]) {
@@ -42,6 +34,8 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
       this._array.every((v, i) => v.equals(m._array[i], precision))
     );
   }
+
+  abstract determinant(): number;
 
   /**
    * Calling `A.multiply(B)` represents the matrix multiplication B * A.
@@ -73,8 +67,6 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
     }
   }
 
-  abstract determinant(): number;
-
   toArray() {
     return this.toColMajorArray();
   }
@@ -90,21 +82,43 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
 
 function set<V extends VectorBase, M extends MatrixBase<V>>(
   this: M,
-  ...args: (number | V | number[])[]
+  ...args: MatrixArgs
 ) {
-  let nums: number[] = [];
-  if (Array.isArray(args[0])) {
-    nums = args.flat() as number[];
-  } else if (typeof args[0] === 'number') {
-    nums = args as number[];
-  } else if (args[0] instanceof VectorBase) {
-    nums = (args as V[]).map((v) => [...v]).flat();
-  }
-  this._array = [];
+  const list: V[] = [];
   for (let i = 0; i < this.dimension; i++) {
-    this._array[i] = this._vec(
-      nums.slice(i * this.dimension, (i + 1) * this.dimension),
-    );
+    list.push(this._vec());
   }
+  if (
+    args.length === 1 &&
+    args[0] &&
+    typeof args[0] === 'object' &&
+    typeof args[0][Symbol.iterator] === 'function'
+  ) {
+    args = [...args[0]] as number[] | Iterable<number>[];
+  }
+  if (typeof args[0] === 'number') {
+    out: for (let i = 0; i < this.dimension; i++) {
+      for (let j = 0; j < this.dimension; j++) {
+        const index = i * this.dimension + j;
+        if (index >= args.length) {
+          break out;
+        }
+        const num = args[index] as number;
+        list[i][j] = Number.isFinite(num) ? num : 0;
+      }
+    }
+  } else if (
+    args[0] &&
+    typeof args[0] === 'object' &&
+    typeof args[0][Symbol.iterator] === 'function'
+  ) {
+    for (let i = 0; i < this.dimension; i++) {
+      if (i >= args.length) {
+        break;
+      }
+      list[i].set(args[i] as Iterable<number>);
+    }
+  }
+  this._array = list;
   return this;
 }

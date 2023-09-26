@@ -1,13 +1,11 @@
 import { VectorBase } from './vector-base';
-import { MatrixBase } from './matrix';
 
-export function createVectorStatics<
-  V extends VectorBase,
-  TM extends MatrixBase<any>,
->(Vector: new () => V) {
+export function createVectorStatics<V extends VectorBase, M>(
+  Vector: new () => V,
+) {
   const statics = {
-    clone(v: V) {
-      return v.clone();
+    clone(v: V, target?: V) {
+      return v.clone(target);
     },
 
     equals(v0: V, v1: V, precision?: number) {
@@ -26,7 +24,7 @@ export function createVectorStatics<
       return target.set(v).scale(n);
     },
 
-    transform(v: V, m: TM, target = new Vector()) {
+    transform(v: V, m: M, target = new Vector()) {
       return target.set(v).transform(m);
     },
 

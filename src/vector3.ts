@@ -2,7 +2,7 @@ import { VectorArgs } from './vector-base';
 import { createVectorStatics } from './vector-static';
 import { Vector2 } from './vector2';
 import { Vector3Base } from './vector3-base';
-import { MatrixBase } from './matrix';
+import { MatrixBase } from './matrix-base';
 import { Matrix3 } from './matrix3';
 import { Matrix4 } from './matrix4';
 
