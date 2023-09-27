@@ -1,10 +1,9 @@
+import { Matrix3 } from './matrix3';
+import { Matrix4 } from './matrix4';
 import { VectorArgs } from './vector-base';
 import { createVectorStatics } from './vector-static';
 import { Vector2 } from './vector2';
 import { Vector3Base } from './vector3-base';
-import { MatrixBase } from './matrix-base';
-import { Matrix3 } from './matrix3';
-import { Matrix4 } from './matrix4';
 
 export class Vector3 extends Vector3Base {
   constructor();
@@ -47,20 +46,19 @@ export class Vector3 extends Vector3Base {
   }
 }
 
-function createVector3Statics<V extends Vector3, TM extends MatrixBase<any>>(
-  Vector: new () => V,
-) {
-  return {
+function createVector3Statics<V extends Vector3, TM>(Vector: new () => V) {
+  const statics = {
     ...createVectorStatics<V, TM>(Vector),
 
     cross(v0: V, v1: V, target = new Vector()) {
       return target.set(v0).cross(v1);
     },
   };
+
+  return statics;
 }
 
-interface Vec3
-  extends ReturnType<typeof createVector3Statics<Vector3, Matrix3 | Matrix4>> {
+export interface CreateVector3 {
   (): Vector3;
   (x: number, y: number, z: number): Vector3;
   (list: number[]): Vector3;
@@ -70,9 +68,11 @@ interface Vec3
   (...args: VectorArgs): Vector3;
 }
 
-const _vec3 = (...args: VectorArgs) => new Vector3(...args);
+const createVector3: CreateVector3 = (...args: VectorArgs) => {
+  return new Vector3(...args);
+};
 
-export const vec3: Vec3 = Object.assign(
-  _vec3,
+export const vec3 = Object.assign(
+  createVector3,
   createVector3Statics<Vector3, Matrix3 | Matrix4>(Vector3),
 );

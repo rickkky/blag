@@ -1,9 +1,9 @@
-import { VectorArgs, VectorBase } from './vector-base';
 import { PRECISION } from './constant';
+import { VectorArgs, VectorBase } from './vector-base';
 
 export type MatrixArgs = number[] | Iterable<number>[] | Iterable<VectorBase>[];
 
-export abstract class MatrixBase<V extends VectorBase = VectorBase> {
+export abstract class MatrixBase<V extends VectorBase> {
   protected _array: V[] = [];
 
   constructor(...args: MatrixArgs) {
@@ -18,7 +18,7 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
     return this.toArray()[Symbol.iterator]();
   }
 
-  protected abstract _vec(...args: VectorArgs): V;
+  protected abstract _vector(...args: VectorArgs): V;
 
   set(...args: MatrixArgs) {
     return set.apply(this, args) as this;
@@ -41,12 +41,12 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
    * Calling `A.multiply(B)` represents the matrix multiplication B * A.
    */
   multiply(m: this, target: this = this) {
-    const nums = [];
+    const vectors = [];
     for (let i = 0; i < target.dimension; i++) {
       const v = target[i].clone().transform(m);
-      nums.push(...v);
+      vectors.push(v);
     }
-    return target.set(nums);
+    return target.set(vectors);
   }
 
   transpose(target: this = this) {
@@ -65,6 +65,7 @@ export abstract class MatrixBase<V extends VectorBase = VectorBase> {
         this._array[i][j] = i === j ? 1 : 0;
       }
     }
+    return this;
   }
 
   toArray() {
@@ -84,9 +85,11 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
   this: M,
   ...args: MatrixArgs
 ) {
-  const list: V[] = [];
+  const vectors: V[] = [];
   for (let i = 0; i < this.dimension; i++) {
-    list.push(this._vec());
+    const v = this._vector();
+    v[i] = 1;
+    vectors.push(v);
   }
   if (
     args.length === 1 &&
@@ -104,7 +107,7 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
           break out;
         }
         const num = args[index] as number;
-        list[i][j] = Number.isFinite(num) ? num : 0;
+        vectors[i][j] = Number.isFinite(num) ? num : 0;
       }
     }
   } else if (
@@ -116,9 +119,9 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
       if (i >= args.length) {
         break;
       }
-      list[i].set(args[i] as Iterable<number>);
+      vectors[i].set(args[i] as Iterable<number>);
     }
   }
-  this._array = list;
+  this._array = vectors;
   return this;
 }

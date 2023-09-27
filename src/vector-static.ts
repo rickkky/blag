@@ -4,7 +4,7 @@ export function createVectorStatics<V extends VectorBase, M>(
   Vector: new () => V,
 ) {
   const statics = {
-    clone(v: V, target?: V) {
+    clone(v: V, target = new Vector()) {
       return v.clone(target);
     },
 

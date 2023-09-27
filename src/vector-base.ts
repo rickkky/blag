@@ -1,5 +1,7 @@
-import { MatrixBase } from './matrix-base';
 import { PRECISION } from './constant';
+import { Matrix2 } from './matrix2';
+import { Matrix3 } from './matrix3';
+import { Matrix4 } from './matrix4';
 
 export type VectorArgs = (number | Iterable<number>)[];
 
@@ -114,9 +116,9 @@ function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
   return this;
 }
 
-function transform<V extends VectorBase, M extends MatrixBase<VectorBase>>(
+function transform<V extends VectorBase>(
   this: V,
-  m: M,
+  m: Matrix2 | Matrix3 | Matrix4,
 ) {
   const v = [...this];
   let homogenous = false;

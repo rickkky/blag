@@ -1,8 +1,8 @@
+import { Matrix2 } from './matrix2';
+import { Matrix3 } from './matrix3';
 import { VectorArgs } from './vector-base';
 import { createVectorStatics } from './vector-static';
 import { Vector2Base } from './vector2-base';
-import { Matrix2 } from './matrix2';
-import { Matrix3 } from './matrix3';
 
 export class Vector2 extends Vector2Base {
   constructor();
@@ -32,8 +32,7 @@ export class Vector2 extends Vector2Base {
   }
 }
 
-interface Vec2
-  extends ReturnType<typeof createVectorStatics<Vector2, Matrix2 | Matrix3>> {
+export interface CreateVector2 {
   (): Vector2;
   (x: number, y: number): Vector2;
   (list: number[]): Vector2;
@@ -41,9 +40,11 @@ interface Vec2
   (...args: VectorArgs): Vector2;
 }
 
-const _vec2 = (...args: VectorArgs) => new Vector2(...args);
+const createVector2: CreateVector2 = (...args: VectorArgs) => {
+  return new Vector2(...args);
+};
 
-export const vec2: Vec2 = Object.assign(
-  _vec2,
+export const vec2 = Object.assign(
+  createVector2,
   createVectorStatics<Vector2, Matrix2 | Matrix3>(Vector2),
 );

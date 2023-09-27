@@ -1,17 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { PRECISION } from '/src/constant';
-import { Vector2, vec2 } from '/src/vector2';
-import { Matrix2 } from '/src/matrix2';
-import { Matrix3 } from '/src/matrix3';
-
-export const expectVector2 = (v: Vector2, [x, y]: number[]) => {
-  expect(v.dimension).toBe(2);
-  expect(v[0]).toBe(x);
-  expect(v.x).toBe(x);
-  expect(v[1]).toBe(y);
-  expect(v.y).toBe(y);
-  expect(v.size).toBeCloseTo(Math.sqrt(x * x + y * y), 12);
-};
+import { expectVector2 } from './vector2-expect';
+import { Matrix2, Matrix3, PRECISION, Vector2, vec2 } from '/src';
 
 describe('vector2', () => {
   test('constructor', () => {

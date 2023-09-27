@@ -1,9 +1,9 @@
+import { Matrix4 } from './matrix4';
 import { VectorArgs } from './vector-base';
 import { createVectorStatics } from './vector-static';
 import { Vector2 } from './vector2';
 import { Vector3 } from './vector3';
 import { Vector4Base } from './vector4-base';
-import { Matrix4 } from './matrix4';
 
 export class Vector4 extends Vector4Base {
   constructor();
@@ -45,8 +45,7 @@ export class Vector4 extends Vector4Base {
   }
 }
 
-interface Vec4
-  extends ReturnType<typeof createVectorStatics<Vector4, Matrix4>> {
+interface CreateVector4 {
   (): Vector4;
   (x: number, y: number, z: number, w: number): Vector4;
   (list: number[]): Vector4;
@@ -60,9 +59,10 @@ interface Vec4
   (...args: VectorArgs): Vector4;
 }
 
-const _vec4 = (...args: VectorArgs) => new Vector4(...args);
+const createVector4: CreateVector4 = (...args: VectorArgs) =>
+  new Vector4(...args);
 
-export const vec4: Vec4 = Object.assign(
-  _vec4,
+export const vec4 = Object.assign(
+  createVector4,
   createVectorStatics<Vector4, Matrix4>(Vector4),
 );

@@ -1,5 +1,5 @@
-import { VectorBase } from './vector-base';
 import { MatrixBase } from './matrix-base';
+import { VectorBase } from './vector-base';
 
 export abstract class Matrix2Base<V extends VectorBase> extends MatrixBase<V> {
   get 0() {
