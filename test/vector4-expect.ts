@@ -1,7 +1,8 @@
 import { expect } from 'vitest';
 import { Vector4 } from '/src/vector4';
 
-export const expectVector4 = (v: Vector4, [x, y, z, w]: number[]) => {
+export const expectVector4 = (v: Vector4, target: number[]) => {
+  const [x, y, z, w] = target;
   expect(v.dimension).toBe(4);
   expect(v[0]).toBe(x);
   expect(v.x).toBe(x);
