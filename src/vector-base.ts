@@ -60,15 +60,15 @@ export abstract class VectorBase {
     return target;
   }
 
-  transform(m: any, target: this = this) {
-    return transform.call(target, m) as this;
-  }
-
   normalize(target: this = this) {
     if (this.size === 0) {
       throw new Error('Cannot normalize a zero vector');
     }
     return target.scale(1 / target.size);
+  }
+
+  transform(m: any, target: this = this) {
+    return transform.call(target, m) as this;
   }
 
   zero() {

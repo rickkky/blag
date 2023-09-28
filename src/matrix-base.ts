@@ -15,7 +15,7 @@ export abstract class MatrixBase<V extends VectorBase> {
   [index: number]: V;
 
   [Symbol.iterator]() {
-    return this.toArray()[Symbol.iterator]();
+    return this._array[Symbol.iterator]();
   }
 
   protected abstract _vector(...args: VectorArgs): V;
@@ -35,29 +35,27 @@ export abstract class MatrixBase<V extends VectorBase> {
     );
   }
 
-  abstract determinant(): number;
-
-  /**
-   * Calling `A.multiply(B)` represents the matrix multiplication B * A.
-   */
   multiply(m: this, target: this = this) {
     const vectors = [];
-    for (let i = 0; i < target.dimension; i++) {
-      const v = target[i].clone().transform(m);
+    for (let i = 0; i < m.dimension; i++) {
+      const v = m[i].clone().transform(this);
       vectors.push(v);
     }
     return target.set(vectors);
   }
 
   transpose(target: this = this) {
-    const array: number[] = [];
-    for (let i = 0; i < target.dimension; i++) {
-      for (let j = 0; j < target.dimension; j++) {
-        array[i * target.dimension + j] = target[j][i];
+    const vectors = [];
+    for (let i = 0; i < this.dimension; i++) {
+      vectors[i] = this._vector();
+      for (let j = 0; j < this.dimension; j++) {
+        vectors[i][j] = this[j][i];
       }
     }
-    return target.set(array);
+    return target.set(vectors);
   }
+
+  abstract determinant(): number;
 
   identity() {
     for (let i = 0; i < this.dimension; i++) {

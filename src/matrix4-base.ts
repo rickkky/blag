@@ -12,6 +12,6 @@ export abstract class Matrix4Base<
   }
 
   set 3(v: V) {
-    this._array[3].set(v);
+    this._array[3] = v;
   }
 }

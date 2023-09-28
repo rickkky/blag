@@ -9,9 +9,10 @@ import { Vector3Base } from './vector3-base';
 
 export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
   constructor();
-  constructor(...list: number[]);
-  constructor(list: number[]);
+  constructor(...ns: number[]);
+  constructor(ns: number[]);
   constructor(v0: Vector3, v1: Vector3, v2: Vector3);
+  constructor(vs: Vector3[]);
   constructor(m: Matrix3);
   constructor(...args: MatrixArgs);
   constructor(...args: MatrixArgs) {
@@ -31,9 +32,10 @@ export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
   }
 
   set(): this;
-  set(...list: number[]): this;
-  set(list: number[]): this;
+  set(...ns: number[]): this;
+  set(ns: number[]): this;
   set(v0: Vector3, v1: Vector3, v2: Vector3): this;
+  set(vs: Vector3[]): this;
   set(m: Matrix3): this;
   set(...args: MatrixArgs): this;
   set(...args: MatrixArgs) {
@@ -64,9 +66,10 @@ export function createMatrix3Statics<
 
 export interface CreateMatrix3 {
   (): Matrix3;
-  (...list: number[]): Matrix3;
-  (list: number[]): Matrix3;
+  (...ns: number[]): Matrix3;
+  (ns: number[]): Matrix3;
   (v0: Vector3, v1: Vector3, v2: Vector3): Matrix3;
+  (vs: Vector3[]): Matrix3;
   (m: Matrix3): Matrix3;
   (...args: MatrixArgs): Matrix3;
 }

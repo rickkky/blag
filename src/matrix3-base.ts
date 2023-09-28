@@ -12,7 +12,7 @@ export abstract class Matrix3Base<
   }
 
   set 2(v: V) {
-    this._array[2].set(v);
+    this._array[2] = v;
   }
 
   protected abstract _submatrix(...args: MatrixArgs): SM;
