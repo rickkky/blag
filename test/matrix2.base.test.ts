@@ -1,138 +1,129 @@
 import { describe, expect, test } from 'vitest';
 import { expectMatrix2 } from './matrix2-expect';
-import { expectVector2 } from './vector2-expect';
+import { NUMS } from './matrix2-sample';
 import { Matrix2, PRECISION, mat2, vec2 } from '/src';
 
 describe('create', () => {
-  // prettier-ignore
-  const elements = [
-    1, 0,
-    0, 1,
-  ];
+  const v0 = vec2(NUMS.INDEX_ROW.slice(0, 2));
+  const v1 = vec2(NUMS.INDEX_ROW.slice(2, 4));
 
   test('constructor', () => {
-    expectMatrix2(new Matrix2(), elements);
+    expectMatrix2(new Matrix2(), NUMS.IDENTITY);
 
-    expectMatrix2(new Matrix2(...elements), elements);
+    expectMatrix2(new Matrix2(...NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(new Matrix2(elements), elements);
+    expectMatrix2(new Matrix2(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(new Matrix2(vec2(1, 0), vec2(0, 1)), elements);
+    expectMatrix2(new Matrix2(v0, v1), NUMS.INDEX_ROW);
 
-    expectMatrix2(new Matrix2(new Matrix2(elements)), elements);
+    expectMatrix2(new Matrix2(new Matrix2(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
 
   test('mat2', () => {
-    expectMatrix2(mat2(), elements);
+    expectMatrix2(mat2(), NUMS.IDENTITY);
 
-    expectMatrix2(mat2(...elements), elements);
+    expectMatrix2(mat2(...NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2(elements), elements);
+    expectMatrix2(mat2(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2(vec2(1, 0), vec2(0, 1)), elements);
+    expectMatrix2(mat2(v0, v1), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2(mat2(elements)), elements);
+    expectMatrix2(mat2(mat2(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
 });
 
-describe('set elements', () => {
-  // prettier-ignore
-  const elements = [
-    0, 1,
-    1, 0,
-  ];
-  const v0 = vec2(0, 1);
-  const v1 = vec2(1, 0);
+describe('set', () => {
+  const v0 = vec2(NUMS.INDEX_ROW.slice(0, 2));
+  const v1 = vec2(NUMS.INDEX_ROW.slice(2, 4));
 
   test('Matrix2.prototype.set', () => {
-    expectMatrix2(mat2().set(...elements), elements);
+    expectMatrix2(mat2().set(...NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2().set(elements), elements);
+    expectMatrix2(mat2().set(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2().set(vec2(0, 1), vec2(1, 0)), elements);
+    expectMatrix2(mat2().set(v0, v1), NUMS.INDEX_ROW);
 
-    expectMatrix2(mat2().set(mat2(elements)), elements);
+    expectMatrix2(mat2().set(mat2(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
 
   test('index setter', () => {
     const m = mat2();
     m[0] = v0;
     m[1] = v1;
-    expectMatrix2(m, elements);
-    expect(m[0] === v0).toBe(true);
-    expect(m[1] === v1).toBe(true);
+    expectMatrix2(m, NUMS.INDEX_ROW);
+    expect(m[0] === v0).toBe(false);
+    expect(m[1] === v1).toBe(false);
   });
 });
 
 describe('convert to array', () => {
-  // prettier-ignore
-  const elements = [
-    1, 0,
-    0, 1,
-  ];
-
   test('iterator', () => {
     const m = mat2();
-    const vecs = [...mat2()];
-    expectVector2(vecs[0], [...m[0]]);
-    expect(vecs[0] === m[0]).toBe(false);
-    expectVector2(vecs[1], [...m[1]]);
-    expect(vecs[1] === m[1]).toBe(false);
+    const vecs = [...m];
+    expect(vecs[0] === m[0]).toBe(true);
+    expect(vecs[1] === m[1]).toBe(true);
   });
 
   test('toArray', () => {
-    expect(mat2.toArray(mat2())).toEqual(elements);
+    const m = mat2(NUMS.INDEX_ROW);
+    expect(mat2.toArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
   test('toColMajorArray', () => {
-    expect(mat2.toColMajorArray(mat2())).toEqual(elements);
+    const m = mat2(NUMS.INDEX_ROW);
+    expect(mat2.toColMajorArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
   test('toRowMajorArray', () => {
-    // prettier-ignore
-    expect(mat2.toRowMajorArray(mat2())).toEqual([
-        elements[0], elements[2],
-        elements[1], elements[3],
-      ]);
+    const m = mat2(NUMS.INDEX_ROW);
+    expect(mat2.toRowMajorArray(m)).toEqual(NUMS.INDEX_COL);
   });
 });
 
 describe('clone', () => {
   test('clone to a new instance', () => {
-    const m0 = mat2();
-    const m1 = mat2.clone(m0);
-    expect(m0 === m1).toBe(false);
-    expect(m0[0] === m1[0]).toBe(false);
-    expect(m0[1] === m1[1]).toBe(false);
-    expect(m0.toArray()).toEqual(m1.toArray());
+    const m = mat2(NUMS.INDEX_ROW);
+    const result = mat2.clone(m);
+    expectMatrix2(result, NUMS.INDEX_ROW);
+    expect(result === m).toBe(false);
+    expect(result[0] === m[0]).toBe(false);
+    expect(result[1] === m[1]).toBe(false);
   });
 
   test('clone to target instance', () => {
-    const m0 = mat2(0, 1, 1, 0);
+    const m0 = mat2(NUMS.INDEX_ROW);
     const m1 = mat2();
-    mat2.clone(m0, m1);
-    expect(m0 === m1).toBe(false);
-    expect(m0[0] === m1[0]).toBe(false);
-    expect(m0[1] === m1[1]).toBe(false);
-    expect(m0.toArray()).toEqual(m1.toArray());
+    const result = mat2.clone(m0, m1);
+    expectMatrix2(m1, NUMS.INDEX_ROW);
+    expect(m1[0] === m0[0]).toBe(false);
+    expect(m1[1] === m0[1]).toBe(false);
+    expect(result === m1).toBe(true);
   });
 });
 
 describe('equals', () => {
   test('exactly equals', () => {
-    const m0 = mat2();
+    const m0 = mat2(NUMS.IDENTITY);
 
-    const m1 = mat2();
+    const m1 = mat2(NUMS.IDENTITY);
     expect(mat2.equals(m0, m1)).toBe(true);
 
-    const m2 = mat2(0, 1, 1, 0);
+    // prettier-ignore
+    const m2 = mat2(
+      1, 1,
+      0, 1,
+    );
     expect(mat2.equals(m0, m2)).toBe(false);
   });
 
   test('approximately equals', () => {
     const m0 = mat2();
 
-    const m1 = mat2(1, PRECISION[15], 0, 1);
+    // prettier-ignore
+    const m1 = mat2(
+      1, PRECISION[15],
+      0, 1,
+    );
     expect(mat2.equals(m0, m1, PRECISION[14])).toBe(true);
     expect(mat2.equals(m0, m1, PRECISION[15])).toBe(true);
     expect(mat2.equals(m0, m1, PRECISION[16])).toBe(false);
