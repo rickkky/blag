@@ -8,7 +8,7 @@ import { Vector4Base } from './vector4-base';
 export class Vector4 extends Vector4Base {
   constructor();
   constructor(x: number, y: number, z: number, w: number);
-  constructor(list: number[]);
+  constructor(nums: number[]);
   constructor(v: Vector4);
   constructor(xyz: Vector3, w: number);
   constructor(x: number, yzw: Vector3);
@@ -27,7 +27,7 @@ export class Vector4 extends Vector4Base {
 
   set(): this;
   set(x: number, y: number, z: number, w: number): this;
-  set(list: number[]): this;
+  set(nums: number[]): this;
   set(v: Vector4): this;
   set(xyz: Vector3, w: number): this;
   set(x: number, yzw: Vector3): this;
@@ -48,7 +48,7 @@ export class Vector4 extends Vector4Base {
 interface CreateVector4 {
   (): Vector4;
   (x: number, y: number, z: number, w: number): Vector4;
-  (list: number[]): Vector4;
+  (nums: number[]): Vector4;
   (v: Vector4): Vector4;
   (xyz: Vector3, w: number): Vector4;
   (x: number, yzw: Vector3): Vector4;

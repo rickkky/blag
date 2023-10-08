@@ -8,7 +8,7 @@ import { Vector3Base } from './vector3-base';
 export class Vector3 extends Vector3Base {
   constructor();
   constructor(x: number, y: number, z: number);
-  constructor(list: number[]);
+  constructor(nums: number[]);
   constructor(v: Vector3);
   constructor(xy: Vector2, z: number);
   constructor(x: number, yz: Vector2);
@@ -23,7 +23,7 @@ export class Vector3 extends Vector3Base {
 
   set(): this;
   set(x: number, y: number, z: number): this;
-  set(list: number[]): this;
+  set(nums: number[]): this;
   set(v: Vector3): this;
   set(xy: Vector2, z: number): this;
   set(x: number, yz: Vector2): this;
@@ -61,7 +61,7 @@ function createVector3Statics<V extends Vector3, TM>(Vector: new () => V) {
 export interface CreateVector3 {
   (): Vector3;
   (x: number, y: number, z: number): Vector3;
-  (list: number[]): Vector3;
+  (nums: number[]): Vector3;
   (v: Vector3): Vector3;
   (xy: Vector2, z: number): Vector3;
   (x: number, yz: Vector2): Vector3;

@@ -7,7 +7,7 @@ import { Vector2Base } from './vector2-base';
 export class Vector2 extends Vector2Base {
   constructor();
   constructor(x: number, y: number);
-  constructor(list: number[]);
+  constructor(nums: number[]);
   constructor(v: Vector2);
   constructor(...args: VectorArgs);
   constructor(...args: VectorArgs) {
@@ -20,7 +20,7 @@ export class Vector2 extends Vector2Base {
 
   set(): this;
   set(x: number, y: number): this;
-  set(list: number[]): this;
+  set(nums: number[]): this;
   set(v: Vector2): this;
   set(...args: VectorArgs): this;
   set(...args: VectorArgs) {
@@ -35,7 +35,7 @@ export class Vector2 extends Vector2Base {
 export interface CreateVector2 {
   (): Vector2;
   (x: number, y: number): Vector2;
-  (list: number[]): Vector2;
+  (nums: number[]): Vector2;
   (v: Vector2): Vector2;
   (...args: VectorArgs): Vector2;
 }

@@ -26,8 +26,8 @@ export function createMatrixStatics<
       return m.transpose(target);
     },
 
-    identity() {
-      return new Matrix().identity();
+    identity(target = new Matrix()) {
+      return target.identity();
     },
 
     toArray(m: M) {

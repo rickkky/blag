@@ -6,10 +6,10 @@ import { Vector2 } from './vector2';
 
 export class Matrix2 extends Matrix2Base<Vector2> {
   constructor();
-  constructor(...ns: number[]);
-  constructor(ns: number[]);
+  constructor(...nums: number[]);
+  constructor(nums: number[]);
   constructor(v0: Vector2, v1: Vector2);
-  constructor(vs: Vector2[]);
+  constructor(vecs: Vector2[]);
   constructor(m: Matrix2);
   constructor(...args: MatrixArgs);
   constructor(...args: MatrixArgs) {
@@ -25,10 +25,10 @@ export class Matrix2 extends Matrix2Base<Vector2> {
   }
 
   set(): this;
-  set(...ns: number[]): this;
-  set(ns: number[]): this;
+  set(...nums: number[]): this;
+  set(nums: number[]): this;
   set(v0: Vector2, v1: Vector2): this;
-  set(vs: Vector2[]): this;
+  set(vecs: Vector2[]): this;
   set(m: Matrix2): this;
   set(...args: MatrixArgs): this;
   set(...args: MatrixArgs) {
@@ -38,14 +38,26 @@ export class Matrix2 extends Matrix2Base<Vector2> {
   determinant() {
     return this[0][0] * this[1][1] - this[0][1] * this[1][0];
   }
+
+  inverse(target = this) {
+    const det = this.determinant();
+    if (det === 0) {
+      throw new Error('Matrix is not invertible');
+    }
+    // prettier-ignore
+    return target.set(
+       this[1][1] / det, -this[0][1] / det,
+      -this[1][0] / det,  this[0][0] / det,
+    );
+  }
 }
 
 export interface CreateMatrix2 {
   (): Matrix2;
-  (...ns: number[]): Matrix2;
-  (ns: number[]): Matrix2;
+  (...nums: number[]): Matrix2;
+  (nums: number[]): Matrix2;
   (v0: Vector2, v1: Vector2): Matrix2;
-  (vs: Vector2[]): Matrix2;
+  (vecs: Vector2[]): Matrix2;
   (m: Matrix2): Matrix2;
   (...args: MatrixArgs): Matrix2;
 }

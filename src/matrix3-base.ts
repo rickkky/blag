@@ -12,7 +12,7 @@ export abstract class Matrix3Base<
   }
 
   set 2(v: V) {
-    this._array[2] = v;
+    this._array[2].set(v);
   }
 
   protected abstract _submatrix(...args: MatrixArgs): SM;
@@ -20,7 +20,7 @@ export abstract class Matrix3Base<
   minor(row: number, col: number, target = this._submatrix()) {
     row = Math.min(Math.max(Math.floor(row), 0), this.dimension - 1);
     col = Math.min(Math.max(Math.floor(col), 0), this.dimension - 1);
-    const list = [];
+    const nums = [];
     for (let i = 0; i < this.dimension; i++) {
       if (i === row) {
         continue;
@@ -32,9 +32,9 @@ export abstract class Matrix3Base<
         }
         v.push(this[i][j]);
       }
-      list.push(...v);
+      nums.push(...v);
     }
-    return target.set(list);
+    return target.set(nums);
   }
 
   determinant() {

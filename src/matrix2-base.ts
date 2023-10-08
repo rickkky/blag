@@ -7,7 +7,7 @@ export abstract class Matrix2Base<V extends VectorBase> extends MatrixBase<V> {
   }
 
   set 0(v: V) {
-    this._array[0] = v;
+    this._array[0].set(v);
   }
 
   get 1() {
@@ -15,6 +15,6 @@ export abstract class Matrix2Base<V extends VectorBase> extends MatrixBase<V> {
   }
 
   set 1(v: V) {
-    this._array[1] = v;
+    this._array[1].set(v);
   }
 }

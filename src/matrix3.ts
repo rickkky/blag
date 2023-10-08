@@ -9,10 +9,10 @@ import { Vector3Base } from './vector3-base';
 
 export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
   constructor();
-  constructor(...ns: number[]);
-  constructor(ns: number[]);
+  constructor(...nums: number[]);
+  constructor(nums: number[]);
   constructor(v0: Vector3, v1: Vector3, v2: Vector3);
-  constructor(vs: Vector3[]);
+  constructor(vecs: Vector3[]);
   constructor(m: Matrix3);
   constructor(...args: MatrixArgs);
   constructor(...args: MatrixArgs) {
@@ -32,14 +32,21 @@ export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
   }
 
   set(): this;
-  set(...ns: number[]): this;
-  set(ns: number[]): this;
+  set(...nums: number[]): this;
+  set(nums: number[]): this;
   set(v0: Vector3, v1: Vector3, v2: Vector3): this;
-  set(vs: Vector3[]): this;
+  set(vecs: Vector3[]): this;
   set(m: Matrix3): this;
   set(...args: MatrixArgs): this;
   set(...args: MatrixArgs) {
     return super.set(...args);
+  }
+
+  inverse() {
+    const det = this.determinant();
+    if (det === 0) {
+      throw new Error('Matrix is not invertible');
+    }
   }
 }
 
@@ -55,10 +62,6 @@ export function createMatrix3Statics<
     minor(m: M, row: number, col: number, target?: SM) {
       return m.minor(row, col, target);
     },
-
-    determinant(m: M) {
-      return m.determinant();
-    },
   };
 
   return statics;
@@ -66,10 +69,10 @@ export function createMatrix3Statics<
 
 export interface CreateMatrix3 {
   (): Matrix3;
-  (...ns: number[]): Matrix3;
-  (ns: number[]): Matrix3;
+  (...nums: number[]): Matrix3;
+  (nums: number[]): Matrix3;
   (v0: Vector3, v1: Vector3, v2: Vector3): Matrix3;
-  (vs: Vector3[]): Matrix3;
+  (vecs: Vector3[]): Matrix3;
   (m: Matrix3): Matrix3;
   (...args: MatrixArgs): Matrix3;
 }

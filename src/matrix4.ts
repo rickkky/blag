@@ -7,10 +7,10 @@ import { Vector4 } from './vector4';
 
 export class Matrix4 extends Matrix4Base<Vector3, Matrix3, Vector4> {
   constructor();
-  constructor(...ns: number[]);
-  constructor(ns: number[]);
+  constructor(...nums: number[]);
+  constructor(nums: number[]);
   constructor(v0: Vector4, v1: Vector4, v2: Vector4, v3: Vector4);
-  constructor(vs: Vector4[]);
+  constructor(vecs: Vector4[]);
   constructor(m: Matrix4);
   constructor(...args: MatrixArgs);
   constructor(...args: MatrixArgs) {
@@ -30,10 +30,10 @@ export class Matrix4 extends Matrix4Base<Vector3, Matrix3, Vector4> {
   }
 
   set(): this;
-  set(...ns: number[]): this;
-  set(ns: number[]): this;
+  set(...nums: number[]): this;
+  set(nums: number[]): this;
   set(v0: Vector4, v1: Vector4, v2: Vector4, v3: Vector4): this;
-  set(vs: Vector4[]): this;
+  set(vecs: Vector4[]): this;
   set(m: Matrix4): this;
   set(...args: MatrixArgs): this;
   set(...args: MatrixArgs) {
@@ -43,10 +43,10 @@ export class Matrix4 extends Matrix4Base<Vector3, Matrix3, Vector4> {
 
 export interface CreateMatrix4 {
   (): Matrix4;
-  (...ns: number[]): Matrix4;
-  (ns: number[]): Matrix4;
+  (...nums: number[]): Matrix4;
+  (nums: number[]): Matrix4;
   (v0: Vector4, v1: Vector4, v2: Vector4, v3: Vector4): Matrix4;
-  (vs: Vector4[]): Matrix4;
+  (vecs: Vector4[]): Matrix4;
   (m: Matrix4): Matrix4;
   (...args: MatrixArgs): Matrix4;
 }

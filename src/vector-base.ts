@@ -85,34 +85,34 @@ export abstract class VectorBase {
 }
 
 function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
-  const list: number[] = [];
+  const nums: number[] = [];
   out: for (const arg of args) {
     if (Number.isFinite(arg)) {
-      list.push(arg as number);
+      nums.push(arg as number);
     } else if (
       arg &&
       typeof arg === 'object' &&
       typeof arg[Symbol.iterator] === 'function'
     ) {
       for (const n of arg) {
-        list.push(Number.isFinite(n) ? n : 0);
-        if (list.length >= this.dimension) {
+        nums.push(Number.isFinite(n) ? n : 0);
+        if (nums.length >= this.dimension) {
           break out;
         }
       }
     } else {
-      list.push(0);
+      nums.push(0);
     }
-    if (list.length >= this.dimension) {
+    if (nums.length >= this.dimension) {
       break;
     }
   }
-  if (list.length < this.dimension) {
-    for (let i = list.length; i < this.dimension; i++) {
-      list.push(0);
+  if (nums.length < this.dimension) {
+    for (let i = nums.length; i < this.dimension; i++) {
+      nums.push(0);
     }
   }
-  this._array = list;
+  this._array = nums;
   return this;
 }
 
