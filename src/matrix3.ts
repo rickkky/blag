@@ -42,11 +42,13 @@ export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
     return super.set(...args);
   }
 
-  inverse() {
+  invert(target = this) {
     const det = this.determinant();
     if (det === 0) {
       throw new Error('Matrix is not invertible');
     }
+    const detInv = 1 / det;
+    return target;
   }
 }
 

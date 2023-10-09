@@ -18,23 +18,20 @@ export abstract class Matrix3Base<
   protected abstract _submatrix(...args: MatrixArgs): SM;
 
   minor(row: number, col: number, target = this._submatrix()) {
-    row = Math.min(Math.max(Math.floor(row), 0), this.dimension - 1);
-    col = Math.min(Math.max(Math.floor(col), 0), this.dimension - 1);
-    const nums = [];
-    for (let i = 0; i < this.dimension; i++) {
-      if (i === row) {
-        continue;
-      }
-      const v = [];
-      for (let j = 0; j < this.dimension; j++) {
-        if (j === col) {
-          continue;
-        }
-        v.push(this[i][j]);
-      }
-      nums.push(...v);
+    const nums = this.toColMajorArray2D();
+    nums.splice(row, 1);
+    for (const v of nums) {
+      v.splice(col, 1);
     }
-    return target.set(nums);
+    return target.set(...nums);
+  }
+
+  cofactor(row: number, col: number, target = this._submatrix()) {
+    this.minor(row, col, target);
+    if ((row + col) % 2 !== 0) {
+      target.multiplyScalar(-1);
+    }
+    return target;
   }
 
   determinant() {

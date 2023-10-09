@@ -69,14 +69,35 @@ describe('convert to array', () => {
     expect(mat2.toArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
+  test('toArray2D', () => {
+    const m = mat2(NUMS.INDEX_ROW);
+    const result = mat2.toArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_ROW.slice(0, 2));
+    expect(result[1]).toEqual(NUMS.INDEX_ROW.slice(2, 4));
+  });
+
   test('toColMajorArray', () => {
     const m = mat2(NUMS.INDEX_ROW);
     expect(mat2.toColMajorArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
+  test('toColMajorArray2D', () => {
+    const m = mat2(NUMS.INDEX_ROW);
+    const result = mat2.toColMajorArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_ROW.slice(0, 2));
+    expect(result[1]).toEqual(NUMS.INDEX_ROW.slice(2, 4));
+  });
+
   test('toRowMajorArray', () => {
     const m = mat2(NUMS.INDEX_ROW);
     expect(mat2.toRowMajorArray(m)).toEqual(NUMS.INDEX_COL);
+  });
+
+  test('toRowMajorArray2D', () => {
+    const m = mat2(NUMS.INDEX_ROW);
+    const result = mat2.toRowMajorArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_COL.slice(0, 2));
+    expect(result[1]).toEqual(NUMS.INDEX_COL.slice(2, 4));
   });
 });
 

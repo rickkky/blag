@@ -35,6 +35,10 @@ export abstract class MatrixBase<V extends VectorBase> {
     );
   }
 
+  multiplyScalar(s: number, target: this = this) {
+    return target.set(this.toArray().map((n) => n * s));
+  }
+
   multiply(m: this, target: this = this) {
     const vectors = [];
     for (let i = 0; i < m.dimension; i++) {
@@ -57,6 +61,8 @@ export abstract class MatrixBase<V extends VectorBase> {
 
   abstract determinant(): number;
 
+  abstract invert(target?: this): this;
+
   identity() {
     for (let i = 0; i < this.dimension; i++) {
       for (let j = 0; j < this.dimension; j++) {
@@ -70,12 +76,24 @@ export abstract class MatrixBase<V extends VectorBase> {
     return this.toColMajorArray();
   }
 
+  toArray2D() {
+    return this.toColMajorArray2D();
+  }
+
   toColMajorArray() {
     return this._array.map((v) => v.toArray()).flat();
   }
 
+  toColMajorArray2D() {
+    return this._array.map((v) => v.toArray());
+  }
+
   toRowMajorArray() {
     return this.clone().transpose().toColMajorArray();
+  }
+
+  toRowMajorArray2D() {
+    return this.clone().transpose().toColMajorArray2D();
   }
 }
 

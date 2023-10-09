@@ -74,14 +74,38 @@ describe('convert to array', () => {
     expect(mat3.toArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
+  test('toArray2D', () => {
+    const m = mat3(NUMS.INDEX_ROW);
+    const result = mat3.toArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_ROW.slice(0, 3));
+    expect(result[1]).toEqual(NUMS.INDEX_ROW.slice(3, 6));
+    expect(result[2]).toEqual(NUMS.INDEX_ROW.slice(6, 9));
+  });
+
   test('toColMajorArray', () => {
     const m = mat3(NUMS.INDEX_ROW);
     expect(mat3.toColMajorArray(m)).toEqual(NUMS.INDEX_ROW);
   });
 
+  test('toColMajorArray2D', () => {
+    const m = mat3(NUMS.INDEX_ROW);
+    const result = mat3.toColMajorArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_ROW.slice(0, 3));
+    expect(result[1]).toEqual(NUMS.INDEX_ROW.slice(3, 6));
+    expect(result[2]).toEqual(NUMS.INDEX_ROW.slice(6, 9));
+  });
+
   test('toRowMajorArray', () => {
     const m = mat3(NUMS.INDEX_ROW);
     expect(mat3.toRowMajorArray(m)).toEqual(NUMS.INDEX_COL);
+  });
+
+  test('toRowMajorArray2D', () => {
+    const m = mat3(NUMS.INDEX_ROW);
+    const result = mat3.toRowMajorArray2D(m);
+    expect(result[0]).toEqual(NUMS.INDEX_COL.slice(0, 3));
+    expect(result[1]).toEqual(NUMS.INDEX_COL.slice(3, 6));
+    expect(result[2]).toEqual(NUMS.INDEX_COL.slice(6, 9));
   });
 });
 

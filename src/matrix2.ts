@@ -39,7 +39,7 @@ export class Matrix2 extends Matrix2Base<Vector2> {
     return this[0][0] * this[1][1] - this[0][1] * this[1][0];
   }
 
-  inverse(target = this) {
+  invert(target = this) {
     const det = this.determinant();
     if (det === 0) {
       throw new Error('Matrix is not invertible');

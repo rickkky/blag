@@ -14,8 +14,8 @@ export function createMatrixStatics<
       return m0.equals(m1, precision);
     },
 
-    determinant(m: M) {
-      return m.determinant();
+    multiplyScalar(m: M, s: number, target = new Matrix()) {
+      return m.multiplyScalar(s, target);
     },
 
     multiply(m0: M, m1: M, target = new Matrix()) {
@@ -26,6 +26,10 @@ export function createMatrixStatics<
       return m.transpose(target);
     },
 
+    determinant(m: M) {
+      return m.determinant();
+    },
+
     identity(target = new Matrix()) {
       return target.identity();
     },
@@ -34,12 +38,24 @@ export function createMatrixStatics<
       return m.toArray();
     },
 
+    toArray2D(m: M) {
+      return m.toArray2D();
+    },
+
     toColMajorArray(m: M) {
       return m.toColMajorArray();
     },
 
+    toColMajorArray2D(m: M) {
+      return m.toColMajorArray2D();
+    },
+
     toRowMajorArray(m: M) {
       return m.toRowMajorArray();
+    },
+
+    toRowMajorArray2D(m: M) {
+      return m.toRowMajorArray2D();
     },
   };
 

@@ -4,6 +4,33 @@ import { NUMS } from './matrix4-sample';
 import { expectMatrix3 } from './matrix3-expect';
 import { mat3, mat4 } from '/src';
 
+describe('multiplyScalar', () => {
+  const nums = NUMS.IDENTITY;
+  const expected = nums.map((n) => n * 2);
+
+  test('Matrix2.prototype.multiplyScalar', () => {
+    const m = mat4(nums);
+    const result = m.multiplyScalar(2);
+    expectMatrix4(m, expected);
+    expect(result === m).toBe(true);
+  });
+
+  test('mat2.multiplyScalar', () => {
+    const m = mat4(nums);
+    const result = mat4.multiplyScalar(m, 2);
+    expectMatrix4(result, expected);
+    expectMatrix4(m, nums);
+  });
+
+  test('store result to target instance', () => {
+    const m = mat4(nums);
+    const target = mat4();
+    const result = mat4.multiplyScalar(m, 2, target);
+    expectMatrix4(target, expected);
+    expect(result === target).toBe(true);
+  });
+});
+
 describe('multiply', () => {
   // prettier-ignore
   const nums0 = [

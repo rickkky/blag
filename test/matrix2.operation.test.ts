@@ -3,6 +3,33 @@ import { expectMatrix2 } from './matrix2-expect';
 import { NUMS } from './matrix2-sample';
 import { mat2 } from '/src';
 
+describe('multiplyScalar', () => {
+  const nums = NUMS.IDENTITY;
+  const expected = nums.map((n) => n * 2);
+
+  test('Matrix2.prototype.multiplyScalar', () => {
+    const m = mat2(nums);
+    const result = m.multiplyScalar(2);
+    expectMatrix2(m, expected);
+    expect(result === m).toBe(true);
+  });
+
+  test('mat2.multiplyScalar', () => {
+    const m = mat2(nums);
+    const result = mat2.multiplyScalar(m, 2);
+    expectMatrix2(result, expected);
+    expectMatrix2(m, nums);
+  });
+
+  test('store result to target instance', () => {
+    const m = mat2(nums);
+    const target = mat2();
+    const result = mat2.multiplyScalar(m, 2, target);
+    expectMatrix2(target, expected);
+    expect(result === target).toBe(true);
+  });
+});
+
 describe('multiply', () => {
   // prettier-ignore
   const nums0 = [
