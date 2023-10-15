@@ -26,6 +26,14 @@ export function createMatrixStatics<
       return m.transpose(target);
     },
 
+    minor(m: M, row: number, col: number) {
+      return m.minor(row, col);
+    },
+
+    cofactor(m: M, row: number, col: number) {
+      return m.cofactor(row, col);
+    },
+
     determinant(m: M) {
       return m.determinant();
     },

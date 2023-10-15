@@ -1,16 +1,15 @@
-import { MatrixArgs, MatrixBase } from './matrix-base';
+import { MatrixArgs } from './matrix-base';
 import { createMatrixStatics } from './matrix-static';
 import { Matrix2 } from './matrix2';
 import { Matrix3Base } from './matrix3-base';
-import { VectorArgs, VectorBase } from './vector-base';
-import { Vector2 } from './vector2';
+import { VectorArgs } from './vector-base';
 import { Vector3 } from './vector3';
-import { Vector3Base } from './vector3-base';
 
-export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
+export class Matrix3 extends Matrix3Base<Vector3> {
   constructor();
   constructor(...nums: number[]);
   constructor(nums: number[]);
+  constructor(nums: number[][]);
   constructor(v0: Vector3, v1: Vector3, v2: Vector3);
   constructor(vecs: Vector3[]);
   constructor(m: Matrix3);
@@ -23,17 +22,23 @@ export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
     return 3;
   }
 
-  protected _vector(...args: VectorArgs) {
+  protected _vec(...args: VectorArgs) {
     return new Vector3(...args);
   }
 
-  protected _submatrix(...args: MatrixArgs) {
-    return new Matrix2(...args);
+  protected _submat(row: number, col: number) {
+    const vecs = this.toColMajorArray2D();
+    vecs.splice(row, 1);
+    for (const v of vecs) {
+      v.splice(col, 1);
+    }
+    return new Matrix2(vecs);
   }
 
   set(): this;
   set(...nums: number[]): this;
   set(nums: number[]): this;
+  set(nums: number[][]): this;
   set(v0: Vector3, v1: Vector3, v2: Vector3): this;
   set(vecs: Vector3[]): this;
   set(m: Matrix3): this;
@@ -52,27 +57,11 @@ export class Matrix3 extends Matrix3Base<Vector2, Matrix2, Vector3> {
   }
 }
 
-export function createMatrix3Statics<
-  SV extends VectorBase,
-  SM extends MatrixBase<SV>,
-  V extends Vector3Base,
-  M extends Matrix3Base<SV, SM, V>,
->(Matrix: new () => M) {
-  const statics = {
-    ...createMatrixStatics<V, M>(Matrix),
-
-    minor(m: M, row: number, col: number, target?: SM) {
-      return m.minor(row, col, target);
-    },
-  };
-
-  return statics;
-}
-
 export interface CreateMatrix3 {
   (): Matrix3;
   (...nums: number[]): Matrix3;
   (nums: number[]): Matrix3;
+  (nums: number[][]): Matrix3;
   (v0: Vector3, v1: Vector3, v2: Vector3): Matrix3;
   (vecs: Vector3[]): Matrix3;
   (m: Matrix3): Matrix3;
@@ -85,5 +74,5 @@ const createMatrix3: CreateMatrix3 = (...args: MatrixArgs) => {
 
 export const mat3 = Object.assign(
   createMatrix3,
-  createMatrix3Statics<Vector2, Matrix2, Vector3, Matrix3>(Matrix3),
+  createMatrixStatics<Vector3, Matrix3>(Matrix3),
 );

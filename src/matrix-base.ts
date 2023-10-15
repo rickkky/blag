@@ -1,7 +1,10 @@
 import { PRECISION } from './constant';
 import { VectorArgs, VectorBase } from './vector-base';
 
-export type MatrixArgs = number[] | Iterable<number>[] | Iterable<VectorBase>[];
+export type MatrixArgs =
+  | number[]
+  | Iterable<number>[]
+  | Iterable<Iterable<number>>[];
 
 export abstract class MatrixBase<V extends VectorBase> {
   protected _array: V[] = [];
@@ -18,14 +21,24 @@ export abstract class MatrixBase<V extends VectorBase> {
     return this._array[Symbol.iterator]();
   }
 
-  protected abstract _vector(...args: VectorArgs): V;
+  protected abstract _vec(...args: VectorArgs): V;
+
+  protected _mat(...args: MatrixArgs): this {
+    return new (Object.getPrototypeOf(this).constructor)(...args);
+  }
+
+  protected abstract _submat(
+    row: number,
+    col: number,
+  ): MatrixBase<any> | number;
 
   set(...args: MatrixArgs) {
     return set.apply(this, args) as this;
   }
 
-  clone(target: this = new (Object.getPrototypeOf(this).constructor)()) {
-    return target.set(this);
+  clone(target: this = this._mat()) {
+    target.set(this);
+    return target;
   }
 
   equals(m: this, precision = PRECISION[0]) {
@@ -35,33 +48,72 @@ export abstract class MatrixBase<V extends VectorBase> {
     );
   }
 
-  multiplyScalar(s: number, target: this = this) {
-    return target.set(this.toArray().map((n) => n * s));
+  multiplyScalar(s: number, target = this) {
+    target.set(this.toArray().map((n) => n * s));
+    return target;
   }
 
-  multiply(m: this, target: this = this) {
-    const vectors = [];
+  multiply(m: this, target = this) {
+    const vecs = [];
     for (let i = 0; i < m.dimension; i++) {
       const v = m[i].clone().transform(this);
-      vectors.push(v);
+      vecs.push(v);
     }
-    return target.set(vectors);
+    target.set(vecs);
+    return target;
   }
 
-  transpose(target: this = this) {
-    const vectors = [];
+  transpose(target = this) {
+    const vecs = [];
     for (let i = 0; i < this.dimension; i++) {
-      vectors[i] = this._vector();
+      vecs[i] = this._vec();
       for (let j = 0; j < this.dimension; j++) {
-        vectors[i][j] = this[j][i];
+        vecs[i][j] = this[j][i];
       }
     }
-    return target.set(vectors);
+    target.set(vecs);
+    return target;
   }
 
-  abstract determinant(): number;
+  minor(row: number, col: number) {
+    const sub = this._submat(row, col);
+    if (typeof sub !== 'number') {
+      return sub.determinant();
+    } else {
+      return sub;
+    }
+  }
 
-  abstract invert(target?: this): this;
+  cofactor(row: number, col: number) {
+    const flag = (row + col) % 2 !== 0 ? -1 : 1;
+    return flag * this.minor(row, col);
+  }
+
+  determinant() {
+    let count = 0;
+    for (let i = 0; i < this.dimension; i++) {
+      count += this[0][i] * this.cofactor(0, i);
+    }
+    return count;
+  }
+
+  invert(target = this) {
+    const det = this.determinant();
+    if (det === 0) {
+      throw new Error('Matrix is not invertible');
+    }
+    const cofs = [];
+    for (let r = 0; r < this.dimension; r++) {
+      for (let c = 0; c < this.dimension; c++) {
+        cofs.push(this.cofactor(r, c));
+      }
+    }
+    target
+      .set(cofs)
+      .transpose()
+      .multiplyScalar(1 / det);
+    return target;
+  }
 
   identity() {
     for (let i = 0; i < this.dimension; i++) {
@@ -101,11 +153,11 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
   this: M,
   ...args: MatrixArgs
 ) {
-  const vectors: V[] = [];
+  const vecs: V[] = [];
   for (let i = 0; i < this.dimension; i++) {
-    const v = this._vector();
+    const v = this._vec();
     v[i] = 1;
-    vectors.push(v);
+    vecs.push(v);
   }
   if (
     args.length === 1 &&
@@ -123,7 +175,7 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
           break out;
         }
         const num = args[index] as number;
-        vectors[i][j] = Number.isFinite(num) ? num : 0;
+        vecs[i][j] = Number.isFinite(num) ? num : 0;
       }
     }
   } else if (
@@ -135,9 +187,9 @@ function set<V extends VectorBase, M extends MatrixBase<V>>(
       if (i >= args.length) {
         break;
       }
-      vectors[i].set(args[i] as Iterable<number>);
+      vecs[i].set(args[i] as Iterable<number>);
     }
   }
-  this._array = vectors;
+  this._array = vecs;
   return this;
 }
