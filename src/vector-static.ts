@@ -13,23 +13,23 @@ export function createVectorStatics<V extends VectorBase, M>(
     },
 
     add(v0: V, v1: V, target = new Vector()) {
-      return target.set(v0).add(v1);
+      return v0.add(v1, target);
     },
 
     substract(v0: V, v1: V, target = new Vector()) {
-      return target.set(v0).substract(v1);
+      return v0.substract(v1, target);
     },
 
     scale(v: V, n: number, target = new Vector()) {
-      return target.set(v).scale(n);
+      return v.scale(n, target);
     },
 
     transform(v: V, m: M, target = new Vector()) {
-      return target.set(v).transform(m);
+      return v.transform(m, target);
     },
 
     normalize(v: V, target = new Vector()) {
-      return target.set(v).normalize();
+      return v.normalize(target);
     },
 
     zero() {

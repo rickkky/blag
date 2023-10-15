@@ -36,7 +36,10 @@ export class Vector3 extends Vector3Base {
     return super.transform(m, target);
   }
 
-  cross(v: this, target: this = this) {
+  cross(v: this, target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     const [x0, y0, z0] = target;
     const [x1, y1, z1] = v;
     target[0] = y0 * z1 - z0 * y1;
@@ -51,7 +54,7 @@ function createVector3Statics<V extends Vector3, TM>(Vector: new () => V) {
     ...createVectorStatics<V, TM>(Vector),
 
     cross(v0: V, v1: V, target = new Vector()) {
-      return target.set(v0).cross(v1);
+      return v0.cross(v1, target);
     },
   };
 

@@ -29,7 +29,8 @@ export abstract class VectorBase {
   }
 
   clone(target: this = new (Object.getPrototypeOf(this).constructor)()) {
-    return target.set(this);
+    target.set(this);
+    return target;
   }
 
   equals(v: this, precision = PRECISION[0]) {
@@ -39,35 +40,50 @@ export abstract class VectorBase {
     );
   }
 
-  add(v: this, target: this = this) {
+  add(v: this, target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     for (let i = 0; i < target.dimension; i++) {
       target[i] += v[i];
     }
     return target;
   }
 
-  substract(v: this, target: this = this) {
+  substract(v: this, target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     for (let i = 0; i < target.dimension; i++) {
       target[i] -= v[i];
     }
     return target;
   }
 
-  scale(n: number, target: this = this) {
+  scale(n: number, target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     for (let i = 0; i < target.dimension; i++) {
       target[i] *= n;
     }
     return target;
   }
 
-  normalize(target: this = this) {
+  normalize(target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     if (this.size === 0) {
       throw new Error('Cannot normalize a zero vector');
     }
     return target.scale(1 / target.size);
   }
 
-  transform(m: any, target: this = this) {
+  transform(m: any, target = this) {
+    if (target !== this) {
+      target.set(this);
+    }
     return transform.call(target, m) as this;
   }
 
