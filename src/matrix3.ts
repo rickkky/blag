@@ -46,15 +46,6 @@ export class Matrix3 extends Matrix3Base<Vector3> {
   set(...args: MatrixArgs) {
     return super.set(...args);
   }
-
-  invert(target = this) {
-    const det = this.determinant();
-    if (det === 0) {
-      throw new Error('Matrix is not invertible');
-    }
-    const detInv = 1 / det;
-    return target;
-  }
 }
 
 export interface CreateMatrix3 {

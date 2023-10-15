@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { expectMatrix4 } from './matrix4-expect';
 import { NUMS } from './matrix4-sample';
-import { expectMatrix3 } from './matrix3-expect';
-import { mat3, mat4 } from '/src';
+import { PRECISION, mat4 } from '/src';
 
 describe('multiplyScalar', () => {
   const nums = NUMS.IDENTITY;
@@ -105,49 +104,55 @@ describe('transpose', () => {
   });
 });
 
-describe('minor', () => {
+describe('determinant', () => {
   // prettier-ignore
   const nums = [
-    0,  1,  2,  3,
-    4,  5,  6,  7,
-    8,  9,  10, 11,
-    12, 13, 14, 15,
+     2,  3,   4,   5,
+    -1, -21, -3,  -4,
+     6,  7,   8,   10,
+    -8, -9,  -10, -12
   ];
+  const expected = 76;
+
+  test('mat4.determinant', () => {
+    const m = mat4(nums);
+    const result = mat4.determinant(m);
+    expect(result).toBe(expected);
+  });
+});
+
+describe('invert', () => {
+  const identity = mat4.identity();
   // prettier-ignore
-  const expected = [
-    5,  6,  7,
-    9,  10, 11,
-    13, 14, 15,
+  const nums = [
+    1, 0, 0, 0,
+    2, 3, 0, 0,
+    4, 5, 6, 0,
+    7, 8, 9, 10,
   ];
 
-  test('mat4.minor', () => {
+  test('Matrix4.prototype.invert', () => {
+    const m0 = mat4(nums);
+    const m1 = mat4(nums);
+    const result = m1.invert();
+    const multiplyResult = m0.multiply(result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
+    expect(result === m1).toBe(true);
+  });
+
+  test('mat4.invert', () => {
     const m = mat4(nums);
-    const result = mat4.minor(m, 0, 0);
-    expectMatrix3(result, expected);
+    const result = mat4.invert(m);
+    const multiplyResult = mat4.multiply(m, result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
   });
 
   test('store result to target instance', () => {
     const m = mat4(nums);
-    const target = mat3();
-    const result = mat4.minor(m, 0, 0, target);
-    expectMatrix3(target, expected);
+    const target = mat4();
+    const result = mat4.invert(m, target);
+    const multiplyResult = mat4.multiply(m, result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
     expect(result === target).toBe(true);
-  });
-});
-
-describe('determinant', () => {
-  test('mat4.determinant', () => {
-    // prettier-ignore
-    const nums = [
-       2,  3,   4,   5,
-      -1, -21, -3,  -4,
-       6,  7,   8,   10,
-      -8, -9,  -10, -12
-    ];
-    const expected = 76;
-
-    const m = mat4(nums);
-    const result = mat4.determinant(m);
-    expect(result).toBe(expected);
   });
 });

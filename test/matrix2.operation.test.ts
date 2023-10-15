@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { expectMatrix2 } from './matrix2-expect';
 import { NUMS } from './matrix2-sample';
-import { mat2 } from '/src';
+import { PRECISION, mat2 } from '/src';
 
 describe('multiplyScalar', () => {
   const nums = NUMS.IDENTITY;
@@ -99,16 +99,50 @@ describe('transpose', () => {
 });
 
 describe('determinant', () => {
-  test('mat2.determinant', () => {
-    // prettier-ignore
-    const nums = [
-      0, 1,
-      2, 3,
-    ];
-    const expected = -2;
+  // prettier-ignore
+  const nums = [
+    0, 1,
+    2, 3,
+  ];
+  const expected = -2;
 
+  test('mat2.determinant', () => {
     const m = mat2(nums);
     const result = mat2.determinant(m);
     expect(result).toBe(expected);
+  });
+});
+
+describe('invert', () => {
+  const identity = mat2.identity();
+  // prettier-ignore
+  const nums = [
+    0, 1,
+    2, 3,
+  ];
+
+  test('Matrix2.prototype.invert', () => {
+    const m0 = mat2(nums);
+    const m1 = mat2(nums);
+    const result = m1.invert();
+    const multiplyResult = mat2.multiply(m0, m1);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
+    expect(result === m1).toBe(true);
+  });
+
+  test('mat2.invert', () => {
+    const m = mat2(nums);
+    const result = mat2.invert(m);
+    const multiplyResult = mat2.multiply(m, result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
+  });
+
+  test('store result to target instance', () => {
+    const m = mat2(nums);
+    const target = mat2();
+    const result = mat2.invert(m, target);
+    const multiplyResult = mat2.multiply(m, result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
+    expect(result === target).toBe(true);
   });
 });

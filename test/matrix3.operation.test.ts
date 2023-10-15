@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { expectMatrix3 } from './matrix3-expect';
 import { NUMS } from './matrix3-sample';
-import { expectMatrix2 } from './matrix2-expect';
-import { mat2, mat3 } from '/src';
+import { PRECISION, mat3 } from '/src';
 
 describe('multiplyScalar', () => {
   const nums = NUMS.IDENTITY;
@@ -102,46 +101,53 @@ describe('transpose', () => {
   });
 });
 
-describe('minor', () => {
+describe('determinant', () => {
   // prettier-ignore
   const nums = [
-    0, 1, 2,
-    3, 4, 5,
-    6, 7, 8,
+    2, 3,  4,
+    5, 13, 7,
+    8, 9,  11,
   ];
+  const expected = -73;
+
+  test('mat3.determinant', () => {
+    const m = mat3(nums);
+    const result = mat3.determinant(m);
+    expect(result).toBe(expected);
+  });
+});
+
+describe('invert', () => {
+  const identity = mat3.identity();
   // prettier-ignore
-  const expected = [
-    4, 5,
-    7, 8,
+  const nums = [
+    1, 0, 0,
+    2, 3, 0,
+    4, 5, 6,
   ];
 
-  test('mat3.minor', () => {
+  test('Matrix3.prototype.invert', () => {
+    const m0 = mat3(nums);
+    const m1 = mat3(nums);
+    const result = m1.invert();
+    const multiplyResult = mat3.multiply(m0, m1);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
+    expect(result === m1).toBe(true);
+  });
+
+  test('mat3.invert', () => {
     const m = mat3(nums);
-    const result = mat3.minor(m, 0, 0);
-    expectMatrix2(result, expected);
+    const result = mat3.invert(m);
+    const multiplyResult = mat3.multiply(m, result);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
   });
 
   test('store result to target instance', () => {
     const m = mat3(nums);
-    const target = mat2();
-    const result = mat3.minor(m, 0, 0, target);
-    expectMatrix2(target, expected);
+    const target = mat3();
+    const result = mat3.invert(m, target);
+    const multiplyResult = mat3.multiply(m, target);
+    expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
     expect(result === target).toBe(true);
-  });
-});
-
-describe('determinant', () => {
-  test('mat3.determinant', () => {
-    // prettier-ignore
-    const nums = [
-      2, 3,  4,
-      5, 13, 7,
-      8, 9,  11,
-    ];
-    const expected = -73;
-
-    const m = mat3(nums);
-    const result = mat3.determinant(m);
-    expect(result).toBe(expected);
   });
 });

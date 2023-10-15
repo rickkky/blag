@@ -4,11 +4,6 @@ import { NUMS } from './matrix4-sample';
 import { Matrix4, PRECISION, mat4, vec4 } from '/src';
 
 describe('create', () => {
-  const v0 = vec4(NUMS.INDEX_ROW.slice(0, 4));
-  const v1 = vec4(NUMS.INDEX_ROW.slice(4, 8));
-  const v2 = vec4(NUMS.INDEX_ROW.slice(8, 12));
-  const v3 = vec4(NUMS.INDEX_ROW.slice(12, 16));
-
   test('constructor', () => {
     expectMatrix4(new Matrix4(), NUMS.IDENTITY);
 
@@ -16,7 +11,25 @@ describe('create', () => {
 
     expectMatrix4(new Matrix4(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix4(new Matrix4(v0, v1, v2, v3), NUMS.INDEX_ROW);
+    expectMatrix4(
+      new Matrix4([
+        NUMS.INDEX_ROW.slice(0, 4),
+        NUMS.INDEX_ROW.slice(4, 8),
+        NUMS.INDEX_ROW.slice(8, 12),
+        NUMS.INDEX_ROW.slice(12, 16),
+      ]),
+      NUMS.INDEX_ROW,
+    );
+
+    expectMatrix4(
+      new Matrix4(
+        vec4(NUMS.INDEX_ROW.slice(0, 4)),
+        vec4(NUMS.INDEX_ROW.slice(4, 8)),
+        vec4(NUMS.INDEX_ROW.slice(8, 12)),
+        vec4(NUMS.INDEX_ROW.slice(12, 16)),
+      ),
+      NUMS.INDEX_ROW,
+    );
 
     expectMatrix4(new Matrix4(new Matrix4(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
@@ -28,30 +41,65 @@ describe('create', () => {
 
     expectMatrix4(mat4(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix4(mat4(v0, v1, v2, v3), NUMS.INDEX_ROW);
+    expectMatrix4(
+      mat4([
+        NUMS.INDEX_ROW.slice(0, 4),
+        NUMS.INDEX_ROW.slice(4, 8),
+        NUMS.INDEX_ROW.slice(8, 12),
+        NUMS.INDEX_ROW.slice(12, 16),
+      ]),
+      NUMS.INDEX_ROW,
+    );
+
+    expectMatrix4(
+      mat4(
+        vec4(NUMS.INDEX_ROW.slice(0, 4)),
+        vec4(NUMS.INDEX_ROW.slice(4, 8)),
+        vec4(NUMS.INDEX_ROW.slice(8, 12)),
+        vec4(NUMS.INDEX_ROW.slice(12, 16)),
+      ),
+      NUMS.INDEX_ROW,
+    );
 
     expectMatrix4(mat4(mat4(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
 });
 
 describe('set', () => {
-  const v0 = vec4(NUMS.INDEX_ROW.slice(0, 4));
-  const v1 = vec4(NUMS.INDEX_ROW.slice(4, 8));
-  const v2 = vec4(NUMS.INDEX_ROW.slice(8, 12));
-  const v3 = vec4(NUMS.INDEX_ROW.slice(12, 16));
-
   test('Matrix4.prototype.set', () => {
     expectMatrix4(mat4().set(...NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
     expectMatrix4(mat4().set(NUMS.INDEX_ROW), NUMS.INDEX_ROW);
 
-    expectMatrix4(mat4().set(v0, v1, v2, v3), NUMS.INDEX_ROW);
+    expectMatrix4(
+      mat4().set([
+        NUMS.INDEX_ROW.slice(0, 4),
+        NUMS.INDEX_ROW.slice(4, 8),
+        NUMS.INDEX_ROW.slice(8, 12),
+        NUMS.INDEX_ROW.slice(12, 16),
+      ]),
+      NUMS.INDEX_ROW,
+    );
+
+    expectMatrix4(
+      mat4().set(
+        vec4(NUMS.INDEX_ROW.slice(0, 4)),
+        vec4(NUMS.INDEX_ROW.slice(4, 8)),
+        vec4(NUMS.INDEX_ROW.slice(8, 12)),
+        vec4(NUMS.INDEX_ROW.slice(12, 16)),
+      ),
+      NUMS.INDEX_ROW,
+    );
 
     expectMatrix4(mat4().set(mat4(NUMS.INDEX_ROW)), NUMS.INDEX_ROW);
   });
 
   test('index setter', () => {
     const m = mat4();
+    const v0 = vec4(NUMS.INDEX_ROW.slice(0, 4));
+    const v1 = vec4(NUMS.INDEX_ROW.slice(4, 8));
+    const v2 = vec4(NUMS.INDEX_ROW.slice(8, 12));
+    const v3 = vec4(NUMS.INDEX_ROW.slice(12, 16));
     m[0] = v0;
     m[1] = v1;
     m[2] = v2;

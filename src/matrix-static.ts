@@ -38,6 +38,10 @@ export function createMatrixStatics<
       return m.determinant();
     },
 
+    invert(m: M, target = new Matrix()) {
+      return m.invert(target);
+    },
+
     identity(target = new Matrix()) {
       return target.identity();
     },

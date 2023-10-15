@@ -40,19 +40,6 @@ export class Matrix2 extends Matrix2Base<Vector2> {
   set(...args: MatrixArgs) {
     return super.set(...args);
   }
-
-  // invert(target = this) {
-  //   const det = this.determinant();
-  //   if (det === 0) {
-  //     throw new Error('Matrix is not invertible');
-  //   }
-  //   // prettier-ignore
-  //   target.set(
-  //      this[1][1] / det, -this[0][1] / det,
-  //     -this[1][0] / det,  this[0][0] / det,
-  //   );
-  //   return target;
-  // }
 }
 
 export interface CreateMatrix2 {
