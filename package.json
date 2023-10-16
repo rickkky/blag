@@ -8,10 +8,12 @@
   ],
   "main": "./dist/g-matrix.umd.cjs",
   "module": "./dist/g-matrix.js",
+  "types": "./dist/g-matrix.d.ts",
   "exports": {
     ".": {
       "import": "./dist/g-matrix.js",
-      "require": "./dist/g-matrix.umd.cjs"
+      "require": "./dist/g-matrix.umd.cjs",
+      "types": "./dist/g-matrix.d.ts"
     }
   },
   "scripts": {
@@ -24,8 +26,9 @@
   "devDependencies": {
     "@types/node": "^18.16.0",
     "@vitest/coverage-c8": "^0.33.0",
-    "typescript": "^5.0.2",
+    "typescript": "^5.2.2",
     "vite": "^4.3.0",
+    "vite-plugin-dts": "^3.6.0",
     "vitest": "^0.30.1"
   }
 }

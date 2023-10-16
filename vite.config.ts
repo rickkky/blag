@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig(() => {
   return {
@@ -10,6 +11,11 @@ export default defineConfig(() => {
         fileName: 'g-matrix',
       },
     },
+    plugins: [
+      dts({
+        rollupTypes: true,
+      }),
+    ],
     server: {
       host: true,
     },
