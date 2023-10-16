@@ -1,9 +1,9 @@
 import { VectorBase } from './vector-base';
 
-export function createVectorStatics<V extends VectorBase, M>(
+export function createVecPrototype<V extends VectorBase, M>(
   Vector: new () => V,
 ) {
-  const statics = {
+  const prototype = {
     clone(v: V, target = new Vector()) {
       return v.clone(target);
     },
@@ -41,5 +41,5 @@ export function createVectorStatics<V extends VectorBase, M>(
     },
   };
 
-  return statics;
+  return prototype;
 }

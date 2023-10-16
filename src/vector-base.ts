@@ -1,7 +1,4 @@
-import { PRECISION } from './constant';
-import { Matrix2 } from './matrix2';
-import { Matrix3 } from './matrix3';
-import { Matrix4 } from './matrix4';
+import { MatrixBase } from './matrix-base';
 
 export type VectorArgs = (number | Iterable<number>)[];
 
@@ -33,7 +30,7 @@ export abstract class VectorBase {
     return target;
   }
 
-  equals(v: this, precision = PRECISION[0]) {
+  equals(v: this, precision = 0) {
     return (
       this.dimension === v.dimension &&
       this._array.every((n, i) => Math.abs(n - v[i]) <= precision)
@@ -132,10 +129,7 @@ function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
   return this;
 }
 
-function transform<V extends VectorBase>(
-  this: V,
-  m: Matrix2 | Matrix3 | Matrix4,
-) {
+function transform<V extends VectorBase>(this: V, m: MatrixBase<any>) {
   const v = [...this];
   let homogenous = false;
   if (this.dimension === m.dimension - 1) {

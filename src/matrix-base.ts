@@ -1,4 +1,3 @@
-import { PRECISION } from './constant';
 import { VectorArgs, VectorBase } from './vector-base';
 
 export type MatrixArgs =
@@ -27,10 +26,7 @@ export abstract class MatrixBase<V extends VectorBase> {
     return new (Object.getPrototypeOf(this).constructor)(...args);
   }
 
-  protected abstract _submat(
-    row: number,
-    col: number,
-  ): MatrixBase<any> | number;
+  protected abstract _sub(row: number, col: number): MatrixBase<any> | number;
 
   set(...args: MatrixArgs) {
     return set.apply(this, args) as this;
@@ -41,7 +37,7 @@ export abstract class MatrixBase<V extends VectorBase> {
     return target;
   }
 
-  equals(m: this, precision = PRECISION[0]) {
+  equals(m: this, precision = 0) {
     return (
       this.dimension === m.dimension &&
       this._array.every((v, i) => v.equals(m._array[i], precision))
@@ -76,7 +72,7 @@ export abstract class MatrixBase<V extends VectorBase> {
   }
 
   minor(row: number, col: number) {
-    const sub = this._submat(row, col);
+    const sub = this._sub(row, col);
     if (typeof sub !== 'number') {
       return sub.determinant();
     } else {

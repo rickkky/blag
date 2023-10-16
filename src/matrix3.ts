@@ -1,5 +1,4 @@
 import { MatrixArgs } from './matrix-base';
-import { createMatrixStatics } from './matrix-static';
 import { Matrix2 } from './matrix2';
 import { Matrix3Base } from './matrix3-base';
 import { VectorArgs } from './vector-base';
@@ -26,7 +25,7 @@ export class Matrix3 extends Matrix3Base<Vector3> {
     return new Vector3(...args);
   }
 
-  protected _submat(row: number, col: number) {
+  protected _sub(row: number, col: number) {
     const vecs = this.toColMajorArray2D();
     vecs.splice(row, 1);
     for (const v of vecs) {
@@ -47,23 +46,3 @@ export class Matrix3 extends Matrix3Base<Vector3> {
     return super.set(...args);
   }
 }
-
-export interface CreateMatrix3 {
-  (): Matrix3;
-  (...nums: number[]): Matrix3;
-  (nums: number[]): Matrix3;
-  (nums: number[][]): Matrix3;
-  (v0: Vector3, v1: Vector3, v2: Vector3): Matrix3;
-  (vecs: Vector3[]): Matrix3;
-  (m: Matrix3): Matrix3;
-  (...args: MatrixArgs): Matrix3;
-}
-
-const createMatrix3: CreateMatrix3 = (...args: MatrixArgs) => {
-  return new Matrix3(...args);
-};
-
-export const mat3 = Object.assign(
-  createMatrix3,
-  createMatrixStatics<Vector3, Matrix3>(Matrix3),
-);

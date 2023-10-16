@@ -1,7 +1,6 @@
 import { Matrix3 } from './matrix3';
 import { Matrix4 } from './matrix4';
 import { VectorArgs } from './vector-base';
-import { createVectorStatics } from './vector-static';
 import { Vector2 } from './vector2';
 import { Vector3Base } from './vector3-base';
 
@@ -48,34 +47,3 @@ export class Vector3 extends Vector3Base {
     return target;
   }
 }
-
-function createVector3Statics<V extends Vector3, TM>(Vector: new () => V) {
-  const statics = {
-    ...createVectorStatics<V, TM>(Vector),
-
-    cross(v0: V, v1: V, target = new Vector()) {
-      return v0.cross(v1, target);
-    },
-  };
-
-  return statics;
-}
-
-export interface CreateVector3 {
-  (): Vector3;
-  (x: number, y: number, z: number): Vector3;
-  (nums: number[]): Vector3;
-  (v: Vector3): Vector3;
-  (xy: Vector2, z: number): Vector3;
-  (x: number, yz: Vector2): Vector3;
-  (...args: VectorArgs): Vector3;
-}
-
-const createVector3: CreateVector3 = (...args: VectorArgs) => {
-  return new Vector3(...args);
-};
-
-export const vec3 = Object.assign(
-  createVector3,
-  createVector3Statics<Vector3, Matrix3 | Matrix4>(Vector3),
-);

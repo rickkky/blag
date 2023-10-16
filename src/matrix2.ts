@@ -1,5 +1,4 @@
 import { MatrixArgs } from './matrix-base';
-import { createMatrixStatics } from './matrix-static';
 import { Matrix2Base } from './matrix2-base';
 import { VectorArgs } from './vector-base';
 import { Vector2 } from './vector2';
@@ -25,7 +24,7 @@ export class Matrix2 extends Matrix2Base<Vector2> {
     return new Vector2(...args);
   }
 
-  protected _submat(row: number, col: number) {
+  protected _sub(row: number, col: number) {
     return this[(row + 1) % 2][(col + 1) % 2];
   }
 
@@ -41,23 +40,3 @@ export class Matrix2 extends Matrix2Base<Vector2> {
     return super.set(...args);
   }
 }
-
-export interface CreateMatrix2 {
-  (): Matrix2;
-  (...nums: number[]): Matrix2;
-  (nums: number[]): Matrix2;
-  (nums: number[][]): Matrix2;
-  (v0: Vector2, v1: Vector2): Matrix2;
-  (vecs: Vector2[]): Matrix2;
-  (m: Matrix2): Matrix2;
-  (...args: MatrixArgs): Matrix2;
-}
-
-const createMatrix2: CreateMatrix2 = (...args: MatrixArgs) => {
-  return new Matrix2(...args);
-};
-
-export const mat2 = Object.assign(
-  createMatrix2,
-  createMatrixStatics<Vector2, Matrix2>(Matrix2),
-);
