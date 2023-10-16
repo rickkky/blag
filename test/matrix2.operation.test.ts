@@ -72,6 +72,15 @@ describe('multiply', () => {
     expectMatrix2(target, expected);
     expect(result === target).toBe(true);
   });
+
+  test('mat2.multiplication', () => {
+    const result = mat2.multiplication(
+      mat2.identity(),
+      mat2(nums0),
+      mat2(nums1),
+    );
+    expectMatrix2(result, expected);
+  });
 });
 
 describe('transpose', () => {

@@ -4,14 +4,14 @@ import { NUMS } from './matrix3-sample';
 import { mat3 } from '/src';
 
 describe('identity', () => {
-  test('Matrix2.prototype.identity', () => {
+  test('Matrix3.prototype.identity', () => {
     const m = mat3(NUMS.INDEX_ROW);
     const result = m.identity();
     expectMatrix3(m, NUMS.IDENTITY);
     expect(result === m).toBe(true);
   });
 
-  test('mat2.identity', () => {
+  test('mat3.identity', () => {
     const result = mat3.identity();
     expectMatrix3(result, NUMS.IDENTITY);
   });

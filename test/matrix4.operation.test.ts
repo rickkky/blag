@@ -78,6 +78,15 @@ describe('multiply', () => {
     expectMatrix4(target, expected);
     expect(result === target).toBe(true);
   });
+
+  test('mat4.multiplication', () => {
+    const result = mat4.multiplication(
+      mat4.identity(),
+      mat4(nums0),
+      mat4(nums1),
+    );
+    expectMatrix4(result, expected);
+  });
 });
 
 describe('transpose', () => {
