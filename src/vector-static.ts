@@ -32,12 +32,16 @@ export function createVecPrototype<V extends VectorBase, M>(
       return v.normalize(target);
     },
 
+    dot(v0: V, v1: V) {
+      return v0.dot(v1);
+    },
+
     zero() {
       return new Vector();
     },
 
-    dot(v0: V, v1: V) {
-      return v0.dot(v1);
+    toArray(v: V) {
+      return [...v];
     },
   };
 
