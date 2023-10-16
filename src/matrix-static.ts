@@ -1,11 +1,11 @@
 import { VectorBase } from './vector-base';
 import { MatrixBase } from './matrix-base';
 
-export function createMatrixStatics<
+export function createMatPrototype<
   V extends VectorBase,
   M extends MatrixBase<V>,
 >(Matrix: new () => M) {
-  const statics = {
+  const prototype = {
     clone(m: M, target = new Matrix()) {
       return m.clone(target);
     },
@@ -20,6 +20,14 @@ export function createMatrixStatics<
 
     multiply(m0: M, m1: M, target = new Matrix()) {
       return m0.multiply(m1, target);
+    },
+
+    multiplication(...ms: M[]) {
+      const m0 = prototype.identity();
+      for (const m of ms) {
+        m0.multiply(m);
+      }
+      return m0;
     },
 
     transpose(m: M, target = new Matrix()) {
@@ -71,5 +79,5 @@ export function createMatrixStatics<
     },
   };
 
-  return statics;
+  return prototype;
 }
