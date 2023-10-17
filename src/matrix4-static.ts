@@ -1,7 +1,7 @@
 import { MatrixArgs } from './matrix-base';
 import { createMatPrototype } from './matrix-static';
-import { Matrix4 } from './matrix4';
-import { Vector4 } from './vector4';
+import { Matrix4 } from './matrix4-class';
+import { Vector4 } from './vector4-class';
 
 export interface CreateMatrix4 {
   (): Matrix4;

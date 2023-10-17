@@ -1,5 +1,5 @@
-import { Matrix2 } from './matrix2';
-import { Matrix3 } from './matrix3';
+import { Matrix2 } from './matrix2-class';
+import { Matrix3 } from './matrix3-class';
 import { VectorArgs } from './vector-base';
 import { Vector2Base } from './vector2-base';
 

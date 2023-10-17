@@ -1,7 +1,7 @@
 import { MatrixArgs } from './matrix-base';
 import { Matrix2Base } from './matrix2-base';
 import { VectorArgs } from './vector-base';
-import { Vector2 } from './vector2';
+import { Vector2 } from './vector2-class';
 
 export class Matrix2 extends Matrix2Base<Vector2> {
   constructor();

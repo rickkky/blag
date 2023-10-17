@@ -1,8 +1,8 @@
 import { MatrixArgs } from './matrix-base';
-import { Matrix2 } from './matrix2';
+import { Matrix2 } from './matrix2-class';
 import { Matrix3Base } from './matrix3-base';
 import { VectorArgs } from './vector-base';
-import { Vector3 } from './vector3';
+import { Vector3 } from './vector3-class';
 
 export class Matrix3 extends Matrix3Base<Vector3> {
   constructor();

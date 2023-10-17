@@ -1,9 +1,9 @@
-import { Matrix4 } from './matrix4';
+import { Matrix4 } from './matrix4-class';
 import { VectorArgs } from './vector-base';
 import { createVecPrototype } from './vector-static';
-import { Vector2 } from './vector2';
-import { Vector3 } from './vector3';
-import { Vector4 } from './vector4';
+import { Vector2 } from './vector2-class';
+import { Vector3 } from './vector3-class';
+import { Vector4 } from './vector4-class';
 
 export interface CreateVector4 {
   (): Vector4;

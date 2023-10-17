@@ -16,8 +16,8 @@ export function createVecPrototype<V extends VectorBase, M>(
       return v0.add(v1, target);
     },
 
-    substract(v0: V, v1: V, target = new Vector()) {
-      return v0.substract(v1, target);
+    subtract(v0: V, v1: V, target = new Vector()) {
+      return v0.subtract(v1, target);
     },
 
     scale(v: V, n: number, target = new Vector()) {
@@ -36,8 +36,8 @@ export function createVecPrototype<V extends VectorBase, M>(
       return v0.dot(v1);
     },
 
-    zero() {
-      return new Vector();
+    zero(target = new Vector()) {
+      return target.zero();
     },
 
     toArray(v: V) {

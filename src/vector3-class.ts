@@ -1,7 +1,7 @@
-import { Matrix3 } from './matrix3';
-import { Matrix4 } from './matrix4';
+import { Matrix3 } from './matrix3-class';
+import { Matrix4 } from './matrix4-class';
 import { VectorArgs } from './vector-base';
-import { Vector2 } from './vector2';
+import { Vector2 } from './vector2-class';
 import { Vector3Base } from './vector3-base';
 
 export class Vector3 extends Vector3Base {

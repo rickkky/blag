@@ -47,7 +47,7 @@ export abstract class VectorBase {
     return target;
   }
 
-  substract(v: this, target = this) {
+  subtract(v: this, target = this) {
     if (target !== this) {
       target.set(this);
     }
@@ -84,12 +84,12 @@ export abstract class VectorBase {
     return transform.call(target, m) as this;
   }
 
-  zero() {
-    return this.set();
-  }
-
   dot(v: this) {
     return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
+  }
+
+  zero() {
+    return this.set();
   }
 
   toArray() {
