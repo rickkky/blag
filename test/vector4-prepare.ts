@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { Vector4 } from '/src/vector4';
+import { Vector4 } from '../src/vector4-class';
 
 export const expectVector4 = (v: Vector4, target: number[]) => {
   const [x, y, z, w] = target;
@@ -13,4 +13,10 @@ export const expectVector4 = (v: Vector4, target: number[]) => {
   expect(v[3]).toBe(w);
   expect(v.w).toBe(w);
   expect(v.size).toBeCloseTo(Math.sqrt(x * x + y * y + z * z + w * w), 12);
+};
+
+export const VEC4_NUMS = {
+  ZERO: [0, 0, 0, 0],
+  INDEX: [0, 1, 2, 3],
+  INDEX_REVERSE: [3, 2, 1, 0],
 };

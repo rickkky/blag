@@ -1,17 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { expectMatrix2 } from './matrix2-expect';
-import { NUMS } from './matrix2-sample';
+import { MAT2_NUMS, expectMatrix2 } from './matrix2-prepare';
 import { PRECISION, mat2 } from '/src';
 
 describe('multiplyScalar', () => {
-  const nums = NUMS.IDENTITY;
+  const nums = MAT2_NUMS.IDENTITY;
   const expected = nums.map((n) => n * 2);
 
   test('Matrix2.prototype.multiplyScalar', () => {
     const m = mat2(nums);
     const result = m.multiplyScalar(2);
     expectMatrix2(m, expected);
-    expect(result === m).toBe(true);
+    expect(result).toBe(m);
   });
 
   test('mat2.multiplyScalar', () => {
@@ -26,7 +25,7 @@ describe('multiplyScalar', () => {
     const target = mat2();
     const result = mat2.multiplyScalar(m, 2, target);
     expectMatrix2(target, expected);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 });
 
@@ -52,7 +51,8 @@ describe('multiply', () => {
     const m1 = mat2(nums1);
     const result = m0.multiply(m1);
     expectMatrix2(m0, expected);
-    expect(result === m0).toBe(true);
+    expect(result).toBe(m0);
+    expectMatrix2(m1, nums1);
   });
 
   test('mat2.multiply', () => {
@@ -70,7 +70,7 @@ describe('multiply', () => {
     const target = mat2();
     const result = mat2.multiply(m0, m1, target);
     expectMatrix2(target, expected);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 
   test('mat2.multiplication', () => {
@@ -85,25 +85,25 @@ describe('multiply', () => {
 
 describe('transpose', () => {
   test('Matrix2.prototype.transpose', () => {
-    const m = mat2(NUMS.INDEX_ROW);
+    const m = mat2(MAT2_NUMS.INDEX_ROW);
     const result = m.transpose();
-    expectMatrix2(m, NUMS.INDEX_COL);
-    expect(result === m).toBe(true);
+    expectMatrix2(m, MAT2_NUMS.INDEX_COL);
+    expect(result).toBe(m);
   });
 
   test('mat2.transpose', () => {
-    const m = mat2(NUMS.INDEX_ROW);
+    const m = mat2(MAT2_NUMS.INDEX_ROW);
     const result = mat2.transpose(m);
-    expectMatrix2(result, NUMS.INDEX_COL);
-    expectMatrix2(m, NUMS.INDEX_ROW);
+    expectMatrix2(result, MAT2_NUMS.INDEX_COL);
+    expectMatrix2(m, MAT2_NUMS.INDEX_ROW);
   });
 
   test('store result to target instance', () => {
-    const m = mat2(NUMS.INDEX_ROW);
+    const m = mat2(MAT2_NUMS.INDEX_ROW);
     const target = mat2();
     const result = mat2.transpose(m, target);
-    expectMatrix2(target, NUMS.INDEX_COL);
-    expect(result === target).toBe(true);
+    expectMatrix2(target, MAT2_NUMS.INDEX_COL);
+    expect(result).toBe(target);
   });
 });
 
@@ -136,7 +136,7 @@ describe('invert', () => {
     const result = m1.invert();
     const multiplyResult = mat2.multiply(m0, m1);
     expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
-    expect(result === m1).toBe(true);
+    expect(result).toBe(m1);
   });
 
   test('mat2.invert', () => {
@@ -152,6 +152,6 @@ describe('invert', () => {
     const result = mat2.invert(m, target);
     const multiplyResult = mat2.multiply(m, result);
     expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 });

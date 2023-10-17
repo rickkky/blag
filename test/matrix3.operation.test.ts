@@ -1,17 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { expectMatrix3 } from './matrix3-expect';
-import { NUMS } from './matrix3-sample';
+import { MAT3_NUMS, expectMatrix3 } from './matrix3-prepare';
 import { PRECISION, mat3 } from '/src';
 
 describe('multiplyScalar', () => {
-  const nums = NUMS.IDENTITY;
+  const nums = MAT3_NUMS.IDENTITY;
   const expected = nums.map((n) => n * 2);
 
   test('Matrix2.prototype.multiplyScalar', () => {
     const m = mat3(nums);
     const result = m.multiplyScalar(2);
     expectMatrix3(m, expected);
-    expect(result === m).toBe(true);
+    expect(result).toBe(m);
   });
 
   test('mat2.multiplyScalar', () => {
@@ -26,7 +25,7 @@ describe('multiplyScalar', () => {
     const target = mat3();
     const result = mat3.multiplyScalar(m, 2, target);
     expectMatrix3(target, expected);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 });
 
@@ -55,7 +54,8 @@ describe('multiply', () => {
     const m1 = mat3(nums1);
     const result = m0.multiply(m1);
     expectMatrix3(m0, expected);
-    expect(result === m0).toBe(true);
+    expect(result).toBe(m0);
+    expectMatrix3(m1, nums1);
   });
 
   test('mat3.multiply', () => {
@@ -73,7 +73,7 @@ describe('multiply', () => {
     const target = mat3();
     const result = mat3.multiply(m0, m1, target);
     expectMatrix3(target, expected);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 
   test('mat3.multiplication', () => {
@@ -88,25 +88,25 @@ describe('multiply', () => {
 
 describe('transpose', () => {
   test('Matrix3.prototype.transpose', () => {
-    const m = mat3(NUMS.INDEX_ROW);
+    const m = mat3(MAT3_NUMS.INDEX_ROW);
     const result = m.transpose();
-    expectMatrix3(m, NUMS.INDEX_COL);
-    expect(result === m).toBe(true);
+    expectMatrix3(m, MAT3_NUMS.INDEX_COL);
+    expect(result).toBe(m);
   });
 
   test('mat3.transpose', () => {
-    const m = mat3(NUMS.INDEX_ROW);
+    const m = mat3(MAT3_NUMS.INDEX_ROW);
     const result = mat3.transpose(m);
-    expectMatrix3(result, NUMS.INDEX_COL);
-    expectMatrix3(m, NUMS.INDEX_ROW);
+    expectMatrix3(result, MAT3_NUMS.INDEX_COL);
+    expectMatrix3(m, MAT3_NUMS.INDEX_ROW);
   });
 
   test('store result to target instance', () => {
-    const m = mat3(NUMS.INDEX_ROW);
+    const m = mat3(MAT3_NUMS.INDEX_ROW);
     const target = mat3();
     const result = mat3.transpose(m, target);
-    expectMatrix3(target, NUMS.INDEX_COL);
-    expect(result === target).toBe(true);
+    expectMatrix3(target, MAT3_NUMS.INDEX_COL);
+    expect(result).toBe(target);
   });
 });
 
@@ -141,7 +141,7 @@ describe('invert', () => {
     const result = m1.invert();
     const multiplyResult = mat3.multiply(m0, m1);
     expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
-    expect(result === m1).toBe(true);
+    expect(result).toBe(m1);
   });
 
   test('mat3.invert', () => {
@@ -157,6 +157,6 @@ describe('invert', () => {
     const result = mat3.invert(m, target);
     const multiplyResult = mat3.multiply(m, target);
     expect(identity.equals(multiplyResult, PRECISION[15])).toBe(true);
-    expect(result === target).toBe(true);
+    expect(result).toBe(target);
   });
 });
