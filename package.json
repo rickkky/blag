@@ -1,6 +1,6 @@
 {
   "name": "glas",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Graphics linear algebra subroutine. A easy-to-use math library to perform vector and matrix operations in JavaScript/TypeScript, designed for the needs of graphics apis like WebGL or WebGPU.",
   "keywords": [
     "math",
