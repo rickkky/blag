@@ -1,19 +1,29 @@
 {
-  "name": "g-matrix",
-  "private": true,
+  "name": "glas",
   "version": "0.0.0",
+  "description": "Graphics linear algebra subroutine. A easy-to-use math library to perform vector and matrix operations in JavaScript/TypeScript, designed for the needs of graphics apis like WebGL or WebGPU.",
+  "keywords": [
+    "math",
+    "linear-algebra",
+    "vector",
+    "matrix",
+    "webgl",
+    "webgpu",
+    "computer-graphics",
+    "blas"
+  ],
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/g-matrix.umd.cjs",
-  "module": "./dist/g-matrix.js",
-  "types": "./dist/g-matrix.d.ts",
+  "main": "./dist/glas.umd.cjs",
+  "module": "./dist/glas.js",
+  "types": "./dist/glas.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/g-matrix.js",
-      "require": "./dist/g-matrix.umd.cjs",
-      "types": "./dist/g-matrix.d.ts"
+      "import": "./dist/glas.js",
+      "require": "./dist/glas.umd.cjs",
+      "types": "./dist/glas.d.ts"
     }
   },
   "scripts": {
