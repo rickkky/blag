@@ -1,7 +1,7 @@
 {
-  "name": "glas",
-  "version": "0.1.1",
-  "description": "Graphics linear algebra subroutine. A easy-to-use math library to perform vector and matrix operations in JavaScript/TypeScript, designed for the needs of graphics apis like WebGL or WebGPU.",
+  "name": "vectrix",
+  "version": "0.0.0",
+  "description": "A easy-to-use math library to perform vector and matrix operations in JavaScript/TypeScript, designed for the needs of graphics apis like WebGL or WebGPU.",
   "keywords": [
     "math",
     "linear-algebra",
@@ -16,14 +16,14 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/glas.umd.cjs",
-  "module": "./dist/glas.js",
-  "types": "./dist/glas.d.ts",
+  "main": "./dist/vectrix.umd.cjs",
+  "module": "./dist/vectrix.js",
+  "types": "./dist/vectrix.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/glas.js",
-      "require": "./dist/glas.umd.cjs",
-      "types": "./dist/glas.d.ts"
+      "import": "./dist/vectrix.js",
+      "require": "./dist/vectrix.umd.cjs",
+      "types": "./dist/vectrix.d.ts"
     }
   },
   "scripts": {

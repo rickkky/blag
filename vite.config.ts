@@ -8,8 +8,8 @@ export default defineConfig(() => {
     build: {
       lib: {
         entry: resolve(__dirname, 'src/index.ts'),
-        name: 'glas',
-        fileName: 'glas',
+        name: 'vectrix',
+        fileName: 'vectrix',
       },
     },
     plugins: [
