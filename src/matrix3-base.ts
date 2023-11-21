@@ -3,10 +3,10 @@ import { VectorBase } from './vector-base';
 
 export abstract class Matrix3Base<V extends VectorBase> extends Matrix2Base<V> {
   get 2(): V {
-    return this._array[2];
+    return this._vecs[2];
   }
 
   set 2(v: V) {
-    this._array[2].set(v);
+    this._vecs[2].set(v);
   }
 }

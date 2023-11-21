@@ -3,18 +3,18 @@ import { VectorBase } from './vector-base';
 
 export abstract class Matrix2Base<V extends VectorBase> extends MatrixBase<V> {
   get 0() {
-    return this._array[0];
+    return this._vecs[0];
   }
 
   set 0(v: V) {
-    this._array[0].set(v);
+    this._vecs[0].set(v);
   }
 
   get 1() {
-    return this._array[1];
+    return this._vecs[1];
   }
 
   set 1(v: V) {
-    this._array[1].set(v);
+    this._vecs[1].set(v);
   }
 }

@@ -22,4 +22,4 @@ export const PRECISION = [
   1e-19,
   1e-20,
   1e-21,
-]
+];

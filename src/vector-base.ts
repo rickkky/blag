@@ -1,157 +1,41 @@
-import { MatrixBase } from './matrix-base';
-
-export type VectorArgs = (number | Iterable<number>)[];
+import { VectorArgs } from './vector-prototype';
 
 export abstract class VectorBase {
-  protected _array: number[] = [];
+  _nums: number[] = [];
 
-  constructor(...args: Parameters<typeof set>) {
-    set.apply(this, args);
-  }
+  constructor() {}
 
   abstract get dimension(): number;
 
   get size() {
-    return Math.hypot(...this._array);
+    return Math.hypot(...this._nums);
   }
 
   [index: number]: number;
 
   [Symbol.iterator]() {
-    return this._array[Symbol.iterator]();
+    return this._nums[Symbol.iterator]();
   }
 
-  set(...args: Parameters<typeof set>) {
-    return set.apply(this, args) as this;
-  }
+  abstract set(...args: VectorArgs): VectorBase;
 
-  clone(target: this = new (Object.getPrototypeOf(this).constructor)()) {
-    target.set(this);
-    return target;
-  }
+  abstract clone(target?: VectorBase): VectorBase;
 
-  equals(v: this, precision = 0) {
-    return (
-      this.dimension === v.dimension &&
-      this._array.every((n, i) => Math.abs(n - v[i]) <= precision)
-    );
-  }
+  abstract equals(v: VectorBase, precision?: number): boolean;
 
-  add(v: this, target = this) {
-    if (target !== this) {
-      target.set(this);
-    }
-    for (let i = 0; i < target.dimension; i++) {
-      target[i] += v[i];
-    }
-    return target;
-  }
+  abstract add(v: VectorBase, target?: VectorBase): VectorBase;
 
-  subtract(v: this, target = this) {
-    if (target !== this) {
-      target.set(this);
-    }
-    for (let i = 0; i < target.dimension; i++) {
-      target[i] -= v[i];
-    }
-    return target;
-  }
+  abstract subtract(v: VectorBase, target?: VectorBase): VectorBase;
 
-  scale(n: number, target = this) {
-    if (target !== this) {
-      target.set(this);
-    }
-    for (let i = 0; i < target.dimension; i++) {
-      target[i] *= n;
-    }
-    return target;
-  }
+  abstract scale(n: number, target?: VectorBase): VectorBase;
 
-  normalize(target = this) {
-    if (target !== this) {
-      target.set(this);
-    }
-    if (this.size === 0) {
-      throw new Error('Cannot normalize a zero vector');
-    }
-    return target.scale(1 / target.size);
-  }
+  abstract normalize(target?: VectorBase): VectorBase;
 
-  transform(m: any, target = this) {
-    if (target !== this) {
-      target.set(this);
-    }
-    return transform.call(target, m) as this;
-  }
+  abstract transform(m: any, target?: VectorBase): VectorBase;
 
-  dot(v: this) {
-    return this._array.reduce((acc, n, i) => acc + n * v[i], 0);
-  }
+  abstract dot(v: VectorBase): number;
 
-  zero() {
-    return this.set();
-  }
+  abstract zero(): VectorBase;
 
-  toArray() {
-    return [...this._array];
-  }
-}
-
-function set<V extends VectorBase>(this: V, ...args: VectorArgs) {
-  const nums: number[] = [];
-  out: for (const arg of args) {
-    if (Number.isFinite(arg)) {
-      nums.push(arg as number);
-    } else if (
-      arg &&
-      typeof arg === 'object' &&
-      typeof arg[Symbol.iterator] === 'function'
-    ) {
-      for (const n of arg) {
-        nums.push(Number.isFinite(n) ? n : 0);
-        if (nums.length >= this.dimension) {
-          break out;
-        }
-      }
-    } else {
-      nums.push(0);
-    }
-    if (nums.length >= this.dimension) {
-      break;
-    }
-  }
-  if (nums.length < this.dimension) {
-    for (let i = nums.length; i < this.dimension; i++) {
-      nums.push(0);
-    }
-  }
-  this._array = nums;
-  return this;
-}
-
-function transform<V extends VectorBase>(this: V, m: MatrixBase<any>) {
-  const v = [...this];
-  let homogenous = false;
-  if (this.dimension === m.dimension - 1) {
-    v.push(1);
-    homogenous = true;
-  }
-  if (v.length !== m.dimension) {
-    throw new Error('Matrix dimension does not match the vector');
-  }
-  const array = [];
-  for (let i = 0; i < v.length; i++) {
-    array[i] = 0;
-    for (let j = 0; j < m.dimension; j++) {
-      array[i] += v[j] * m[j][i];
-    }
-  }
-  if (homogenous) {
-    const w = array.pop()!;
-    for (let i = 0; i < array.length; i++) {
-      array[i] /= w;
-    }
-  }
-  this._array = array;
-  return this;
+  abstract toArray(): number[];
 }

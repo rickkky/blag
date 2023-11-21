@@ -2,11 +2,11 @@ import { VectorBase } from './vector-base';
 
 export abstract class Vector2Base extends VectorBase {
   get 0() {
-    return this._array[0];
+    return this._nums[0];
   }
 
   set 0(n: number) {
-    this._array[0] = n;
+    this._nums[0] = n;
   }
 
   get x() {
@@ -18,11 +18,11 @@ export abstract class Vector2Base extends VectorBase {
   }
 
   get 1() {
-    return this._array[1];
+    return this._nums[1];
   }
 
   set 1(n: number) {
-    this._array[1] = n;
+    this._nums[1] = n;
   }
 
   get y() {

@@ -6,14 +6,14 @@ describe('multiplyScalar', () => {
   const nums = MAT4_NUMS.IDENTITY;
   const expected = nums.map((n) => n * 2);
 
-  test('Matrix2.prototype.multiplyScalar', () => {
+  test('Matrix4.prototype.multiplyScalar', () => {
     const m = mat4(nums);
     const result = m.multiplyScalar(2);
     expectMatrix4(m, expected);
     expect(result).toBe(m);
   });
 
-  test('mat2.multiplyScalar', () => {
+  test('mat4.multiplyScalar', () => {
     const m = mat4(nums);
     const result = mat4.multiplyScalar(m, 2);
     expectMatrix4(result, expected);
@@ -78,14 +78,64 @@ describe('multiply', () => {
     expectMatrix4(target, expected);
     expect(result).toBe(target);
   });
+});
+
+describe('multiplication', () => {
+  // prettier-ignore
+  const nums0 = [
+    0,  1,  2,  3,
+    4,  5,  6,  7,
+    8,  9,  10, 11,
+    12, 13, 14, 15,
+  ];
+  // prettier-ignore
+  const nums1 = [
+    16, 17, 18, 19,
+    20, 21, 22, 23,
+    24, 25, 26, 27,
+    28, 29, 30, 31,
+  ];
+  const nums2 = MAT4_NUMS.IDENTITY;
+  // prettier-ignore
+  const expected = [
+    440, 510, 580, 650,
+    536, 622, 708, 794,
+    632, 734, 836, 938,
+    728, 846, 964, 1082,
+  ];
+
+  test('Matrix4.prototype.multiplication', () => {
+    const m0 = mat4(nums0);
+    const m1 = mat4(nums1);
+    const m2 = mat4(nums2);
+    const target = mat4();
+    const result = target.multiplication([m0, m1, m2]);
+    expectMatrix4(target, expected);
+    expect(result).toBe(target);
+    expectMatrix4(m0, nums0);
+    expectMatrix4(m1, nums1);
+    expectMatrix4(m2, nums2);
+  });
 
   test('mat4.multiplication', () => {
-    const result = mat4.multiplication(
-      mat4.identity(),
-      mat4(nums0),
-      mat4(nums1),
-    );
+    const m0 = mat4(nums0);
+    const m1 = mat4(nums1);
+    const m2 = mat4(nums2);
+    const result = mat4.multiplication([m0, m1, m2]);
     expectMatrix4(result, expected);
+    expectMatrix4(m0, nums0);
+    expectMatrix4(m1, nums1);
+    expectMatrix4(m2, nums2);
+  });
+
+  test('store result to target instance', () => {
+    const m0 = mat4(nums0);
+    const m1 = mat4(nums1);
+    const m2 = mat4(nums2);
+    const target = mat4();
+    const result = mat4.multiplication([m0, m1, m2], target);
+    expectMatrix4(target, expected);
+    expect(result).toBe(target);
   });
 });
 

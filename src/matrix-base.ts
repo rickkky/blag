@@ -1,191 +1,54 @@
-import { VectorArgs, VectorBase } from './vector-base';
+import { VectorBase } from './vector-base';
+import { MatrixArgs } from './matrix-prototype';
 
-export type MatrixArgs =
-  | number[]
-  | Iterable<number>[]
-  | Iterable<Iterable<number>>[];
+export abstract class MatrixBase<V extends VectorBase = any> {
+  _vecs: V[] = [];
 
-export abstract class MatrixBase<V extends VectorBase> {
-  protected _array: V[] = [];
-
-  constructor(...args: MatrixArgs) {
-    set.apply(this, args);
-  }
+  constructor() {}
 
   abstract get dimension(): number;
 
   [index: number]: V;
 
   [Symbol.iterator]() {
-    return this._array[Symbol.iterator]();
+    return this._vecs[Symbol.iterator]();
   }
 
-  protected abstract _vec(...args: VectorArgs): V;
+  abstract _sub(row: number, col: number): MatrixBase | number;
 
-  protected _mat(...args: MatrixArgs): this {
-    return new (Object.getPrototypeOf(this).constructor)(...args);
-  }
+  abstract set(...args: MatrixArgs): MatrixBase;
 
-  protected abstract _sub(row: number, col: number): MatrixBase<any> | number;
+  abstract clone(target?: MatrixBase): MatrixBase;
 
-  set(...args: MatrixArgs) {
-    return set.apply(this, args) as this;
-  }
+  abstract equals(m: MatrixBase, precision?: number): boolean;
 
-  clone(target: this = this._mat()) {
-    target.set(this);
-    return target;
-  }
+  abstract multiplyScalar(s: number, target?: MatrixBase): MatrixBase;
 
-  equals(m: this, precision = 0) {
-    return (
-      this.dimension === m.dimension &&
-      this._array.every((v, i) => v.equals(m._array[i], precision))
-    );
-  }
+  abstract multiply(m: MatrixBase, target?: MatrixBase): MatrixBase;
 
-  multiplyScalar(s: number, target = this) {
-    target.set(this.toArray().map((n) => n * s));
-    return target;
-  }
+  abstract multiplication(mats: MatrixBase[], target?: MatrixBase): MatrixBase;
 
-  multiply(m: this, target = this) {
-    const vecs = [];
-    for (let i = 0; i < m.dimension; i++) {
-      const v = m[i].clone().transform(this);
-      vecs.push(v);
-    }
-    target.set(vecs);
-    return target;
-  }
+  abstract transpose(target?: MatrixBase): MatrixBase;
 
-  transpose(target = this) {
-    const vecs = [];
-    for (let i = 0; i < this.dimension; i++) {
-      vecs[i] = this._vec();
-      for (let j = 0; j < this.dimension; j++) {
-        vecs[i][j] = this[j][i];
-      }
-    }
-    target.set(vecs);
-    return target;
-  }
+  abstract minor(row: number, col: number): number;
 
-  minor(row: number, col: number) {
-    const sub = this._sub(row, col);
-    if (typeof sub !== 'number') {
-      return sub.determinant();
-    } else {
-      return sub;
-    }
-  }
+  abstract cofactor(row: number, col: number): number;
 
-  cofactor(row: number, col: number) {
-    const flag = (row + col) % 2 !== 0 ? -1 : 1;
-    return flag * this.minor(row, col);
-  }
+  abstract determinant(): number;
 
-  determinant() {
-    let count = 0;
-    for (let i = 0; i < this.dimension; i++) {
-      count += this[0][i] * this.cofactor(0, i);
-    }
-    return count;
-  }
+  abstract invert(target?: MatrixBase): MatrixBase;
 
-  invert(target = this) {
-    const det = this.determinant();
-    if (det === 0) {
-      throw new Error('Matrix is not invertible');
-    }
-    const cofs = [];
-    for (let r = 0; r < this.dimension; r++) {
-      for (let c = 0; c < this.dimension; c++) {
-        cofs.push(this.cofactor(r, c));
-      }
-    }
-    target
-      .set(cofs)
-      .transpose()
-      .multiplyScalar(1 / det);
-    return target;
-  }
+  abstract identity(): MatrixBase;
 
-  identity() {
-    for (let i = 0; i < this.dimension; i++) {
-      for (let j = 0; j < this.dimension; j++) {
-        this._array[i][j] = i === j ? 1 : 0;
-      }
-    }
-    return this;
-  }
+  abstract toArray(): number[];
 
-  toArray() {
-    return this.toColMajorArray();
-  }
+  abstract toColMajorArray(): number[];
 
-  toArray2D() {
-    return this.toColMajorArray2D();
-  }
+  abstract toRowMajorArray(): number[];
 
-  toColMajorArray() {
-    return this._array.map((v) => v.toArray()).flat();
-  }
+  abstract toArray2D(): number[][];
 
-  toColMajorArray2D() {
-    return this._array.map((v) => v.toArray());
-  }
+  abstract toColMajorArray2D(): number[][];
 
-  toRowMajorArray() {
-    return this.clone().transpose().toColMajorArray();
-  }
-
-  toRowMajorArray2D() {
-    return this.clone().transpose().toColMajorArray2D();
-  }
-}
-
-function set<V extends VectorBase, M extends MatrixBase<V>>(
-  this: M,
-  ...args: MatrixArgs
-) {
-  const vecs: V[] = [];
-  for (let i = 0; i < this.dimension; i++) {
-    const v = this._vec();
-    v[i] = 1;
-    vecs.push(v);
-  }
-  if (
-    args.length === 1 &&
-    args[0] &&
-    typeof args[0] === 'object' &&
-    typeof args[0][Symbol.iterator] === 'function'
-  ) {
-    args = [...args[0]] as number[] | Iterable<number>[];
-  }
-  if (typeof args[0] === 'number') {
-    out: for (let i = 0; i < this.dimension; i++) {
-      for (let j = 0; j < this.dimension; j++) {
-        const index = i * this.dimension + j;
-        if (index >= args.length) {
-          break out;
-        }
-        const num = args[index] as number;
-        vecs[i][j] = Number.isFinite(num) ? num : 0;
-      }
-    }
-  } else if (
-    args[0] &&
-    typeof args[0] === 'object' &&
-    typeof args[0][Symbol.iterator] === 'function'
-  ) {
-    for (let i = 0; i < this.dimension; i++) {
-      if (i >= args.length) {
-        break;
-      }
-      vecs[i].set(args[i] as Iterable<number>);
-    }
-  }
-  this._array = vecs;
-  return this;
+  abstract toRowMajorArray2D(): number[][];
 }

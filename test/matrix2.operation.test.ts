@@ -72,14 +72,58 @@ describe('multiply', () => {
     expectMatrix2(target, expected);
     expect(result).toBe(target);
   });
+});
+
+describe('multiplication', () => {
+  // prettier-ignore
+  const nums0 = [
+    0, 1,
+    2, 3,
+  ];
+  // prettier-ignore
+  const nums1 = [
+    4, 5,
+    6, 7,
+  ];
+  const nums2 = MAT2_NUMS.IDENTITY;
+  // prettier-ignore
+  const expected = [
+    10, 19,
+    14, 27,
+  ];
+
+  test('Matrix2.prototype.multiplication', () => {
+    const m0 = mat2(nums0);
+    const m1 = mat2(nums1);
+    const m2 = mat2(nums2);
+    const target = mat2();
+    const result = target.multiplication([m0, m1, m2]);
+    expectMatrix2(target, expected);
+    expect(result).toBe(target);
+    expectMatrix2(m0, nums0);
+    expectMatrix2(m1, nums1);
+    expectMatrix2(m2, nums2);
+  });
 
   test('mat2.multiplication', () => {
-    const result = mat2.multiplication(
-      mat2.identity(),
-      mat2(nums0),
-      mat2(nums1),
-    );
+    const m0 = mat2(nums0);
+    const m1 = mat2(nums1);
+    const m2 = mat2(nums2);
+    const result = mat2.multiplication([m0, m1, m2]);
     expectMatrix2(result, expected);
+    expectMatrix2(m0, nums0);
+    expectMatrix2(m1, nums1);
+    expectMatrix2(m2, nums2);
+  });
+
+  test('store result to target instance', () => {
+    const m0 = mat2(nums0);
+    const m1 = mat2(nums1);
+    const m2 = mat2(nums2);
+    const target = mat2();
+    const result = mat2.multiplication([m0, m1, m2], target);
+    expectMatrix2(target, expected);
+    expect(result).toBe(target);
   });
 });
 
