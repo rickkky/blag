@@ -50,7 +50,7 @@ export class Vector3 extends Vector3Base {
     return prototype.set(this, ...args);
   }
 
-  clone(target: Vector3): Vector3 {
+  clone(target?: Vector3): Vector3 {
     return prototype.clone(this, target);
   }
 

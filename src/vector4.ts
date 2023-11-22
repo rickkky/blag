@@ -42,7 +42,7 @@ export class Vector4 extends Vector4Base {
     return prototype.set(this, ...args);
   }
 
-  clone(target: Vector4): Vector4 {
+  clone(target?: Vector4): Vector4 {
     return prototype.clone(this, target);
   }
 

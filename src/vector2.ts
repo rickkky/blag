@@ -31,7 +31,7 @@ export class Vector2 extends Vector2Base {
     return prototype.set(this, ...args);
   }
 
-  clone(target: Vector2): Vector2 {
+  clone(target?: Vector2): Vector2 {
     return prototype.clone(this, target);
   }
 

@@ -47,7 +47,7 @@ export class Matrix4 extends Matrix4Base<Vector4> {
     return prototype.set(this, ...args);
   }
 
-  clone(target: Matrix4): Matrix4 {
+  clone(target?: Matrix4): Matrix4 {
     return prototype.clone(this, target);
   }
 
