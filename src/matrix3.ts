@@ -1,12 +1,10 @@
 import { Vector3 } from './vector3';
-import { createMatrixPrototype, MatrixArgs } from './matrix-prototype';
+import { MatrixArgs } from './matrix-prototype';
 import { Matrix2 } from './matrix2';
 import { Matrix3Base } from './matrix3-base';
+import { createMatrix3Prototype } from './matrix3-prototype';
 
-const prototype = createMatrixPrototype<Vector3, Matrix3>(
-  () => new Vector3(),
-  () => new Matrix3(),
-);
+const prototype = createMatrix3Prototype();
 
 export class Matrix3 extends Matrix3Base<Vector3> {
   constructor();
@@ -89,6 +87,18 @@ export class Matrix3 extends Matrix3Base<Vector3> {
 
   identity(): Matrix3 {
     return prototype.identity(this);
+  }
+
+  translation(tx: number, ty: number, target: Matrix3 = this): Matrix3 {
+    return prototype.translation(tx, ty, target);
+  }
+
+  scaling(sx: number, sy: number, target: Matrix3 = this): Matrix3 {
+    return prototype.scaling(sx, sy, target);
+  }
+
+  rotation(angle: number, target: Matrix3 = this): Matrix3 {
+    return prototype.rotation(angle, target);
   }
 
   toArray(): number[] {

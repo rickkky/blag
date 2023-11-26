@@ -132,7 +132,7 @@ export function createVectorPrototype<
     return [...v];
   }
 
-  const prototype = {
+  return {
     set,
     clone,
     equals,
@@ -145,6 +145,4 @@ export function createVectorPrototype<
     zero,
     toArray,
   };
-
-  return prototype;
 }

@@ -23,3 +23,31 @@ export const PRECISION = [
   1e-20,
   1e-21,
 ];
+
+export interface BoundingBox {
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+  zMin: number;
+  zMax: number;
+}
+
+export const CLIP = {
+  WEBGL: {
+    xMin: -1,
+    xMax: 1,
+    yMin: -1,
+    yMax: 1,
+    zMin: -1,
+    zMax: 1,
+  },
+  WEBGPU: {
+    xMin: -1,
+    xMax: 1,
+    yMin: -1,
+    yMax: 1,
+    zMin: 0,
+    zMax: 1,
+  },
+};

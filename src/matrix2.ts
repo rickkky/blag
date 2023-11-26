@@ -1,11 +1,9 @@
 import { Vector2 } from './vector2';
-import { createMatrixPrototype, MatrixArgs } from './matrix-prototype';
+import { MatrixArgs } from './matrix-prototype';
 import { Matrix2Base } from './matrix2-base';
+import { createMatrix2Prototype } from './matrix2-prototype';
 
-const prototype = createMatrixPrototype<Vector2, Matrix2>(
-  () => new Vector2(),
-  () => new Matrix2(),
-);
+const prototype = createMatrix2Prototype();
 
 export class Matrix2 extends Matrix2Base<Vector2> {
   constructor();

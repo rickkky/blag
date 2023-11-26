@@ -1,12 +1,12 @@
-import { createMatrixPrototype, MatrixArgs } from './matrix-prototype';
+import { Vector3 } from './vector3';
+import { Vector4 } from './vector4';
+import { MatrixArgs } from './matrix-prototype';
 import { Matrix3 } from './matrix3';
 import { Matrix4Base } from './matrix4-base';
-import { Vector4 } from './vector4';
+import { createMatrix4Prototype } from './matrix4-prototype';
+import { BoundingBox } from './constant';
 
-const prototype = createMatrixPrototype<Vector4, Matrix4>(
-  () => new Vector4(),
-  () => new Matrix4(),
-);
+const prototype = createMatrix4Prototype();
 
 export class Matrix4 extends Matrix4Base<Vector4> {
   constructor();
@@ -93,6 +93,67 @@ export class Matrix4 extends Matrix4Base<Vector4> {
 
   toArray(): number[] {
     return prototype.toArray(this);
+  }
+
+  translation(
+    tx: number,
+    ty: number,
+    tz: number,
+    target: Matrix4 = this,
+  ): Matrix4 {
+    return prototype.translation(tx, ty, tz, target);
+  }
+
+  scaling(sx: number, sy: number, sz: number, target: Matrix4 = this): Matrix4 {
+    return prototype.scaling(sx, sy, sz, target);
+  }
+
+  rotationX(angle: number, target: Matrix4 = this): Matrix4 {
+    return prototype.rotationX(angle, target);
+  }
+
+  rotationY(angle: number, target: Matrix4 = this): Matrix4 {
+    return prototype.rotationY(angle, target);
+  }
+
+  rotationZ(angle: number, target: Matrix4 = this): Matrix4 {
+    return prototype.rotationZ(angle, target);
+  }
+
+  rotation(
+    angleX: number,
+    angleY: number,
+    angleZ: number,
+    target: Matrix4 = this,
+  ): Matrix4 {
+    return prototype.rotation(angleX, angleY, angleZ, target);
+  }
+
+  orthographic(
+    view: BoundingBox,
+    clip?: BoundingBox,
+    target: Matrix4 = this,
+  ): Matrix4 {
+    return prototype.orthographic(view, clip, target);
+  }
+
+  perspective(
+    fov: number,
+    aspect: number,
+    near: number,
+    far: number,
+    clip?: BoundingBox,
+    target: Matrix4 = this,
+  ): Matrix4 {
+    return prototype.perspective(fov, aspect, near, far, clip, target);
+  }
+
+  targetTo(eye: Vector3, aim: Vector3, up: Vector3, target: Matrix4 = this) {
+    return prototype.targetTo(eye, aim, up, target);
+  }
+
+  lookAt(eye: Vector3, aim: Vector3, up: Vector3, target: Matrix4 = this) {
+    return prototype.lookAt(eye, aim, up, target);
   }
 
   toColMajorArray(): number[] {

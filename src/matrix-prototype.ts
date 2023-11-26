@@ -91,7 +91,7 @@ export function createMatrixPrototype<
     }
     target.set(mats[0]);
     for (let i = 1; i < mats.length; i++) {
-      prototype.multiply(target, mats[i], target);
+      multiply(target, mats[i], target);
     }
     return target;
   }
@@ -176,7 +176,7 @@ export function createMatrixPrototype<
     return toColMajorArray2D(transpose(m));
   }
 
-  const prototype = {
+  return {
     set,
     clone,
     equals,
@@ -196,6 +196,4 @@ export function createMatrixPrototype<
     toColMajorArray2D,
     toRowMajorArray2D,
   };
-
-  return prototype;
 }
