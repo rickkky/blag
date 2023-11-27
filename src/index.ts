@@ -6,4 +6,5 @@ export { Matrix2, mat2 } from './matrix2';
 export { Matrix3, mat3 } from './matrix3';
 export { Matrix4, mat4 } from './matrix4';
 
-export { PRECISION } from './constant';
+export { PRECISION, CLIP } from './constant';
+export type { BoundingBox } from './constant';
