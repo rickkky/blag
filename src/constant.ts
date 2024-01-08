@@ -25,29 +25,31 @@ export const PRECISION = [
 ];
 
 export interface BoundingBox {
-  xMin: number;
-  xMax: number;
-  yMin: number;
-  yMax: number;
-  zMin: number;
-  zMax: number;
+  xmin: number;
+  xmax: number;
+  ymin: number;
+  ymax: number;
+  zmin: number;
+  zmax: number;
 }
 
+const CLIP_WEBGL: BoundingBox = {
+  xmin: -1,
+  xmax: 1,
+  ymin: -1,
+  ymax: 1,
+  zmin: -1,
+  zmax: 1,
+};
+const CLIP_WEBGPU: BoundingBox = {
+  xmin: -1,
+  xmax: 1,
+  ymin: -1,
+  ymax: 1,
+  zmin: 0,
+  zmax: 1,
+};
 export const CLIP = {
-  WEBGL: {
-    xMin: -1,
-    xMax: 1,
-    yMin: -1,
-    yMax: 1,
-    zMin: -1,
-    zMax: 1,
-  },
-  WEBGPU: {
-    xMin: -1,
-    xMax: 1,
-    yMin: -1,
-    yMax: 1,
-    zMin: 0,
-    zMax: 1,
-  },
+  WEBGL: CLIP_WEBGL,
+  WEBGPU: CLIP_WEBGPU,
 };
