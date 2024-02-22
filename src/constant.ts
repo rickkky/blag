@@ -24,31 +24,32 @@ export const PRECISION = [
   1e-21,
 ];
 
-export interface BoundingBox {
-  xmin: number;
-  xmax: number;
-  ymin: number;
-  ymax: number;
-  zmin: number;
-  zmax: number;
+export interface Extent {
+  left: number;
+  right: number;
+  bottom: number;
+  top: number;
+  near: number;
+  far: number;
 }
 
-const CLIP_WEBGL: BoundingBox = {
-  xmin: -1,
-  xmax: 1,
-  ymin: -1,
-  ymax: 1,
-  zmin: -1,
-  zmax: 1,
+const CLIP_WEBGL: Extent = {
+  left: -1,
+  right: 1,
+  bottom: -1,
+  top: 1,
+  near: -1,
+  far: 1,
 };
-const CLIP_WEBGPU: BoundingBox = {
-  xmin: -1,
-  xmax: 1,
-  ymin: -1,
-  ymax: 1,
-  zmin: 0,
-  zmax: 1,
+const CLIP_WEBGPU: Extent = {
+  left: -1,
+  right: 1,
+  bottom: -1,
+  top: 1,
+  near: 0,
+  far: 1,
 };
+
 export const CLIP = {
   WEBGL: CLIP_WEBGL,
   WEBGPU: CLIP_WEBGPU,
