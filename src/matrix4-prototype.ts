@@ -128,7 +128,6 @@ export function createMatrix4Prototype() {
   /**
    * Convert the view frustum to canonical view volume.
    * Observer is at (0, 0, 0) and looks along -z with +y up.
-   * The canonical view volume should be symmetrical to x and y axis.
    *
    * @param {number} fovy - field of view for y in radian
    * @param {number} aspect - width / height ratio
@@ -144,10 +143,12 @@ export function createMatrix4Prototype() {
     clip: Extent = CLIP.WEBGL,
     target = createMatrix(),
   ) {
+    const wz = -1;
     const f = 1 / Math.tan(fovy / 2);
     const sy = ((clip.top - clip.bottom) * f) / 2;
+    const ty = (clip.top + clip.bottom) / 2;
     const sx = ((clip.right - clip.left) * f) / (2 * aspect);
-    const wz = -1;
+    const tx = (clip.right + clip.left) / 2;
     const rangeInv = -1 / (far - near);
     const sz = (clip.far * far - clip.near * near) * rangeInv;
     const tz = (clip.far - clip.near) * near * far * rangeInv;
@@ -155,7 +156,7 @@ export function createMatrix4Prototype() {
     const nums = [
       sx, 0,  0,  0,
       0,  sy, 0,  0,
-      0,  0,  sz, wz,
+      tx, ty, sz, wz,
       0,  0,  tz, 0,
     ];
     return prototype.set(target, nums);
