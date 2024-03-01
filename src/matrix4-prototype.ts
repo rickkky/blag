@@ -80,14 +80,14 @@ export function createMatrix4Prototype() {
     return prototype.set(target, nums);
   }
 
-  function rotation(
+  function rotationXYZ(
     angleX: number,
     angleY: number,
     angleZ: number,
     target = createMatrix(),
   ) {
     return prototype.multiplication(
-      [rotationX(angleX), rotationY(angleY), rotationZ(angleZ)],
+      [rotationZ(angleZ), rotationY(angleY), rotationX(angleX)],
       target,
     );
   }
@@ -203,7 +203,7 @@ export function createMatrix4Prototype() {
     rotationX,
     rotationY,
     rotationZ,
-    rotation,
+    rotationXYZ,
     orthographic,
     perspective,
     targetTo,

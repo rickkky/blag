@@ -4,7 +4,7 @@ import { MatrixArgs } from './matrix-prototype';
 import { Matrix3 } from './matrix3';
 import { Matrix4Base } from './matrix4-base';
 import { createMatrix4Prototype } from './matrix4-prototype';
-import { BoundingBox } from './constant';
+import { Extent } from './constant';
 
 const prototype = createMatrix4Prototype();
 
@@ -120,21 +120,35 @@ export class Matrix4 extends Matrix4Base<Vector4> {
     return prototype.rotationZ(angle, target);
   }
 
-  rotation(
+  rotationXYZ(
     angleX: number,
     angleY: number,
     angleZ: number,
     target: Matrix4 = this,
   ): Matrix4 {
-    return prototype.rotation(angleX, angleY, angleZ, target);
+    return prototype.rotationXYZ(angleX, angleY, angleZ, target);
   }
 
   orthographic(
-    view: BoundingBox,
-    clip?: BoundingBox,
+    left: number,
+    right: number,
+    bottom: number,
+    top: number,
+    near: number,
+    far: number,
+    clip?: Extent,
     target: Matrix4 = this,
   ): Matrix4 {
-    return prototype.orthographic(view, clip, target);
+    return prototype.orthographic(
+      left,
+      right,
+      bottom,
+      top,
+      near,
+      far,
+      clip,
+      target,
+    );
   }
 
   perspective(
@@ -142,7 +156,7 @@ export class Matrix4 extends Matrix4Base<Vector4> {
     aspect: number,
     near: number,
     far: number,
-    clip?: BoundingBox,
+    clip?: Extent,
     target: Matrix4 = this,
   ): Matrix4 {
     return prototype.perspective(fov, aspect, near, far, clip, target);
