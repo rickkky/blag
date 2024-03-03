@@ -1,4 +1,5 @@
 import { VectorBase } from './vector-base';
+import { Vector2 } from './vector2';
 
 export abstract class Vector2Base extends VectorBase {
   get 0() {
@@ -31,5 +32,13 @@ export abstract class Vector2Base extends VectorBase {
 
   set y(n: number) {
     this[1] = n;
+  }
+
+  get xy() {
+    return new Vector2(this.x, this.y);
+  }
+
+  get yx() {
+    return new Vector2(this.y, this.x);
   }
 }
